@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { LogoutButton } from "@/components/logout-button";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 
 const headingFont = Cormorant_Garamond({
@@ -18,12 +17,7 @@ export default async function Home() {
   const user = await getCurrentUser();
   if (user?.role === "ADMIN") redirect("/admin");
 
-  const navActions = user ? (
-    <div className="flex items-center gap-3">
-      <span className="hidden text-sm text-white/90 md:inline">{user.name}</span>
-      <LogoutButton />
-    </div>
-  ) : (
+  const navActions = (
     <div className="flex items-center gap-2">
       <Link
         href="/login"
