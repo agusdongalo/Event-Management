@@ -29,9 +29,7 @@ export function LogoutButton({
       setLoading(false);
       return;
     }
-    if (redirectTo) {
-      router.push(redirectTo);
-    }
+    router.push(redirectTo ?? "/");
     router.refresh();
     setLoading(false);
   }

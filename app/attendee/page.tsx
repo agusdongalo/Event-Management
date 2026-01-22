@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
-import { AttendeeUserMenu } from "@/components/attendee-user-menu";
+import { LogoutButton } from "@/components/logout-button";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -49,18 +49,33 @@ export default async function AttendeeAccountPage() {
           <div className="flex-1">
             <p className="text-xs uppercase tracking-[0.45em] text-[#d8b26f]">Attendee Account</p>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-              <h1 className={`${headingFont.className} text-5xl text-[#f6e7c8] md:text-6xl`}>
-                Welcome back, {user.name}
+              <h1 className={`${headingFont.className} text-4xl text-[#f6e7c8] md:text-6xl`}>
+                <span className="block">Welcome back, Guest</span>
+                <span className="italic">{user.name}</span>
               </h1>
-              <AttendeeUserMenu name={user.name} email={user.email} />
+              <div className="hidden items-center gap-3 rounded-full border border-[#2a3248] bg-[#12192a] px-4 py-2 md:inline-flex">
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-[#d8b26f] text-sm font-semibold text-[#151515]">
+                  {user.name.slice(0, 1).toUpperCase()}
+                </div>
+                <div className="pr-2">
+                  <p className="text-sm font-semibold text-[#f3eee6]">{user.name}</p>
+                  <p className="text-xs text-[#9aa4b8]">{user.email}</p>
+                </div>
+              </div>
             </div>
-            <div className="mt-5 flex flex-wrap items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link
                 href="/events"
-                className="rounded-full border border-[#ead8b4] bg-black/40 px-4 py-2 text-xs font-semibold text-[#f6e7c8] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:bg-black/60"
+                className="attendee-gold-cta rounded-full border border-[#ead8b4] bg-black/40 px-4 py-2 text-xs font-semibold text-[#f6e7c8] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:bg-black/60"
               >
                 Browse Events
               </Link>
+              <LogoutButton
+                containerClassName="flex"
+                className="rounded-full border border-[#ead8b4] bg-black/25 px-4 py-2 text-xs font-semibold text-[#f6e7c8] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:bg-black/50"
+                errorClassName="text-[11px] text-rose-200"
+                redirectTo="/"
+              />
             </div>
           </div>
         </header>
@@ -123,12 +138,12 @@ export default async function AttendeeAccountPage() {
               href="/profile"
               className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[linear-gradient(90deg,#ba9054_0%,#e2c48e_55%,#c89f63_100%)] px-4 py-2 text-xs font-semibold text-[#16140f] transition hover:brightness-110"
             >
-              Edit Profile
+              View Profile
             </Link>
           </article>
         </section>
 
-        <section className="mt-8 rounded-2xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_26px_60px_rgba(0,0,0,0.45)]">
+        <section className="mt-8 rounded-2xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_26px_60px_rgba(0,0,0,0.45)] hidden md:block">
           <div className="flex items-center justify-between">
             <h2 className={`${headingFont.className} text-2xl text-[#f6e7c8]`}>Recent Events</h2>
             <Link href="/events" className="text-xs text-[#d8b26f]">
