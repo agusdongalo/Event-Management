@@ -146,7 +146,7 @@ export default async function OrganizerDashboardPage() {
 
         <section className="organizer-content p-5 md:p-7">
           <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
+            <div className="organizer-top-shadow flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
               <span className="text-[#8b93ad]">??</span>
               <input
                 placeholder="Search..."
@@ -156,7 +156,7 @@ export default async function OrganizerDashboardPage() {
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white bg-white text-sm text-[#51607f] shadow-sm"
+                className="organizer-top-shadow grid h-10 w-10 place-items-center rounded-full border border-white bg-white text-sm text-[#51607f] shadow-sm"
                 aria-label="Notifications"
               >
                 <svg
@@ -174,8 +174,10 @@ export default async function OrganizerDashboardPage() {
                   <path d="M5 17h14" />
                 </svg>
               </button>
-              <ThemeToggleButton />
-              <div className="flex items-center gap-3 rounded-full bg-white px-3 py-1.5 shadow-sm">
+              <div className="organizer-top-shadow organizer-top-shadow-circle">
+                <ThemeToggleButton />
+              </div>
+              <div className="organizer-top-shadow flex items-center gap-3 rounded-full bg-white px-3 py-1.5 shadow-sm">
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f4ff] text-sm font-semibold text-[#4a5b87]">
                   {user.name.slice(0, 1).toUpperCase()}
                 </div>
@@ -191,7 +193,7 @@ export default async function OrganizerDashboardPage() {
             {statCards.map((card) => (
               <article
                 key={card.title}
-                className={`rounded-xl bg-gradient-to-r ${card.tone} p-4 text-white shadow-md`}
+                className={`organizer-stat-card rounded-xl bg-gradient-to-r ${card.tone} p-4 text-white shadow-md`}
               >
                 <p className="text-xs text-white/80">{card.title}</p>
                 <p className="mt-2 text-2xl font-semibold">{card.value}</p>
@@ -222,10 +224,10 @@ export default async function OrganizerDashboardPage() {
                         <td className="py-2 font-medium">{event.name}</td>
                         <td className="py-2 text-[#6b7593]">{event.date}</td>
                         <td className="py-2">
-                          <span className="rounded-full bg-[#ede9ff] px-2 py-1 text-xs text-[#5c53d6]">
+                          <span className="organizer-badge organizer-badge-managing rounded-full bg-[#ede9ff] px-2 py-1 text-xs text-[#5c53d6]">
                             {event.status[0]}
                           </span>
-                          <span className="ml-2 rounded-full bg-[#e7f7ef] px-2 py-1 text-xs text-[#2f8a62]">
+                          <span className="organizer-badge organizer-badge-upcoming ml-2 rounded-full bg-[#e7f7ef] px-2 py-1 text-xs text-[#2f8a62]">
                             {event.status[1]}
                           </span>
                         </td>
@@ -250,7 +252,7 @@ export default async function OrganizerDashboardPage() {
               </ul>
               <button
                 type="button"
-                className="mt-3 w-full rounded-lg bg-[#3b5dd0] px-3 py-2 text-xs font-semibold text-white"
+                className="organizer-add-task mt-3 w-full rounded-lg bg-[#3b5dd0] px-3 py-2 text-xs font-semibold text-white"
               >
                 + Add Task
               </button>
