@@ -33,3 +33,7 @@ body {
 body.organizer-dark .organizer-theme {
   filter: invert(1) hue-rotate(180deg);
 }
+
+body.organizer-dark .organizer-theme {
+  filter: invert(1) hue-rotate(180deg);
+}
