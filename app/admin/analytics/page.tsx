@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { SegmentedToggle } from "@/components/segmented-toggle";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -139,43 +140,43 @@ export default async function AdminAnalyticsPage() {
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Revenue Trend</h2>
-                <span className="text-xs text-[#8b93ad]">Last 6 months</span>
+                <SegmentedToggle options={["Year", "Month", "Week", "Day"]} initialIndex={1} />
               </div>
               <div className="rounded-xl border border-[#eef1f7] bg-[#f8f9fd] p-3">
-                <svg viewBox="0 0 640 240" className="h-[220px] w-full">
+                <svg viewBox="0 0 600 220" className="h-[220px] w-full">
                   <defs>
                     <linearGradient id="revLine" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#5b7bff" />
-                      <stop offset="100%" stopColor="#3b5dd0" />
+                      <stop offset="0%" stopColor="#6c86ff" />
+                      <stop offset="100%" stopColor="#4464e6" />
                     </linearGradient>
                     <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#5b7bff" stopOpacity="0.45" />
-                      <stop offset="100%" stopColor="#5b7bff" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#6c86ff" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#6c86ff" stopOpacity="0" />
                     </linearGradient>
                   </defs>
-                  <g stroke="#e7eaf4" strokeWidth="1">
-                    {[30, 70, 110, 150, 190].map((y) => (
-                      <line key={y} x1="0" y1={y} x2="640" y2={y} />
+                  <g stroke="#e7ebf5" strokeWidth="1">
+                    {[25, 65, 105, 145, 185].map((y) => (
+                      <line key={y} x1="0" y1={y} x2="600" y2={y} />
                     ))}
                   </g>
                   <path
-                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70"
+                    d="M0 170 C40 130 70 110 100 116 C140 124 160 148 200 126 C240 104 270 92 300 104 C340 120 360 136 400 116 C440 96 470 72 500 82 C540 92 570 80 600 74"
                     fill="none"
                     stroke="url(#revLine)"
                     strokeWidth="3"
                   />
                   <path
-                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70 L640 240 L0 240 Z"
+                    d="M0 170 C40 130 70 110 100 116 C140 124 160 148 200 126 C240 104 270 92 300 104 C340 120 360 136 400 116 C440 96 470 72 500 82 C540 92 570 80 600 74 L600 220 L0 220 Z"
                     fill="url(#revFill)"
                   />
-                  <g fill="#4d6bff">
+                  <g fill="#4f6bff">
                     {[100, 200, 300, 400, 500].map((x, index) => (
-                      <circle key={x} cx={x} cy={[125, 140, 115, 130, 90][index]} r="4" />
+                      <circle key={x} cx={x} cy={[116, 126, 104, 116, 82][index]} r="3.5" />
                     ))}
                   </g>
                   <g fill="#7b86a6" fontSize="10">
                     {months.map((label, index) => (
-                      <text key={label} x={index * 53} y={230}>
+                      <text key={label} x={index * 100} y={212}>
                         {label}
                       </text>
                     ))}
@@ -187,43 +188,43 @@ export default async function AdminAnalyticsPage() {
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Attendance Rate</h2>
-                <span className="text-xs text-[#8b93ad]">Last 6 months</span>
+                <SegmentedToggle options={["Year", "Month", "Week", "Day"]} initialIndex={1} />
               </div>
               <div className="rounded-xl border border-[#eef1f7] bg-[#f8f9fd] p-3">
-                <svg viewBox="0 0 640 240" className="h-[220px] w-full">
+                <svg viewBox="0 0 600 220" className="h-[220px] w-full">
                   <defs>
                     <linearGradient id="attLine" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#3bbf8a" />
-                      <stop offset="100%" stopColor="#2f8a62" />
+                      <stop offset="0%" stopColor="#34b37f" />
+                      <stop offset="100%" stopColor="#2a8b62" />
                     </linearGradient>
                     <linearGradient id="attFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3bbf8a" stopOpacity="0.35" />
-                      <stop offset="100%" stopColor="#3bbf8a" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#34b37f" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#34b37f" stopOpacity="0" />
                     </linearGradient>
                   </defs>
-                  <g stroke="#e7eaf4" strokeWidth="1">
-                    {[30, 70, 110, 150, 190].map((y) => (
-                      <line key={y} x1="0" y1={y} x2="640" y2={y} />
+                  <g stroke="#e7ebf5" strokeWidth="1">
+                    {[25, 65, 105, 145, 185].map((y) => (
+                      <line key={y} x1="0" y1={y} x2="600" y2={y} />
                     ))}
                   </g>
                   <path
-                    d="M0 170 C40 150 70 140 100 145 C140 150 160 170 200 155 C240 140 270 120 300 130 C340 145 360 155 400 140 C440 125 470 110 500 115 C540 120 570 110 600 108 C620 107 630 105 640 102"
+                    d="M0 160 C40 145 70 135 100 140 C140 148 160 160 200 150 C240 138 270 126 300 132 C340 142 360 150 400 140 C440 130 470 120 500 124 C540 128 570 122 600 120"
                     fill="none"
                     stroke="url(#attLine)"
                     strokeWidth="3"
                   />
                   <path
-                    d="M0 170 C40 150 70 140 100 145 C140 150 160 170 200 155 C240 140 270 120 300 130 C340 145 360 155 400 140 C440 125 470 110 500 115 C540 120 570 110 600 108 C620 107 630 105 640 102 L640 240 L0 240 Z"
+                    d="M0 160 C40 145 70 135 100 140 C140 148 160 160 200 150 C240 138 270 126 300 132 C340 142 360 150 400 140 C440 130 470 120 500 124 C540 128 570 122 600 120 L600 220 L0 220 Z"
                     fill="url(#attFill)"
                   />
-                  <g fill="#2f8a62">
+                  <g fill="#2a8b62">
                     {[100, 200, 300, 400, 500].map((x, index) => (
-                      <circle key={x} cx={x} cy={[145, 155, 130, 140, 115][index]} r="4" />
+                      <circle key={x} cx={x} cy={[140, 150, 132, 140, 124][index]} r="3.5" />
                     ))}
                   </g>
                   <g fill="#7b86a6" fontSize="10">
                     {months.map((label, index) => (
-                      <text key={label} x={index * 53} y={230}>
+                      <text key={label} x={index * 100} y={212}>
                         {label}
                       </text>
                     ))}
