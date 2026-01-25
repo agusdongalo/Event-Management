@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
-import { RegistrationStatus } from "@prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { LogoutButton } from "@/components/logout-button";
@@ -16,49 +15,32 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-function formatDateTime(value: Date) {
-  return value.toLocaleString("en-US", {
+function formatDate(value?: Date | null) {
+  if (!value) return "—";
+  return value.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   });
 }
 
-export default async function OrganizerMessagesPage() {
+export default async function OrganizerProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role !== "ORGANIZER") redirect("/");
 
-  const recentRegistrations = await prisma.registration.findMany({
-    where: {
-      status: RegistrationStatus.REGISTERED,
-      event: { organizerId: user.id },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 8,
-    select: {
-      id: true,
-      createdAt: true,
-      user: { select: { name: true, email: true } },
-      event: { select: { title: true, startAt: true } },
-    },
-  });
-
-  const messages = recentRegistrations.map((registration, index) => ({
-    id: registration.id,
-    subject: `${registration.user.name} booked ${registration.event.title}`,
-    preview: `Reservation confirmed for ${registration.event.title} on ${formatDateTime(
-      registration.event.startAt
-    )}.`,
-    from: registration.user.email,
-    time: registration.createdAt,
-    unread: index < 3,
-  }));
-
-  const unreadCount = messages.filter((message) => message.unread).length;
+  const [eventsCount, registrationsCount, upcomingEvents, profileUser] = await Promise.all([
+    prisma.event.count({ where: { organizerId: user.id } }),
+    prisma.registration.count({ where: { event: { organizerId: user.id } } }),
+    prisma.event.count({
+      where: { organizerId: user.id, startAt: { gte: new Date() } },
+    }),
+    prisma.user.findUnique({
+      where: { id: user.id },
+      select: { createdAt: true },
+    }),
+  ]);
 
   return (
     <main className={`${bodyFont.className} min-h-screen bg-[#090b11] text-[#f3eee6]`}>
@@ -80,8 +62,8 @@ export default async function OrganizerMessagesPage() {
               { label: "My Events", href: "/organizer/my-events", active: false },
               { label: "Bookings", href: "/organizer/bookings", active: false },
               { label: "Attendees", href: "/organizer/attendees", active: false },
-              { label: "Messages", href: "/organizer/messages", active: true },
-              { label: "My Profile", href: "/organizer/profile", active: false },
+              { label: "Messages", href: "/organizer/messages", active: false },
+              { label: "My Profile", href: "/organizer/profile", active: true },
             ].map((item) => (
               <Link
                 key={item.label}
@@ -110,7 +92,7 @@ export default async function OrganizerMessagesPage() {
             <div className="flex h-12 w-full max-w-xl items-center gap-2 rounded-xl border border-[#222c48] bg-[#0f1527] px-3">
               <span className="text-[#93a1c6]">S</span>
               <input
-                placeholder="Search messages..."
+                placeholder="Search profile settings..."
                 className="h-full w-full bg-transparent text-sm text-[#f3eee6] outline-none placeholder:text-[#7f8cad]"
               />
             </div>
@@ -135,59 +117,87 @@ export default async function OrganizerMessagesPage() {
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#2c2d75_0%,#3d4cb5_100%)] p-4">
-              <p className="text-xs text-[#dce2ff]">Total Messages</p>
-              <p className="mt-2 text-3xl font-bold">{messages.length}</p>
+              <p className="text-xs text-[#dce2ff]">Total Events</p>
+              <p className="mt-2 text-3xl font-bold">{eventsCount}</p>
             </article>
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#1f5d4a_0%,#28846b_100%)] p-4">
-              <p className="text-xs text-[#d9fff4]">Unread</p>
-              <p className="mt-2 text-3xl font-bold">{unreadCount}</p>
+              <p className="text-xs text-[#d9fff4]">Upcoming Events</p>
+              <p className="mt-2 text-3xl font-bold">{upcomingEvents}</p>
             </article>
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#21506a_0%,#2b7b9d_100%)] p-4">
-              <p className="text-xs text-[#ddf4ff]">Auto Alerts</p>
-              <p className="mt-2 text-3xl font-bold">{messages.length}</p>
+              <p className="text-xs text-[#ddf4ff]">Total Bookings</p>
+              <p className="mt-2 text-3xl font-bold">{registrationsCount}</p>
             </article>
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#6a4321_0%,#8d5f31_100%)] p-4">
-              <p className="text-xs text-[#fff0dd]">Response SLA</p>
-              <p className="mt-2 text-3xl font-bold">2h</p>
+              <p className="text-xs text-[#fff0dd]">Member Since</p>
+              <p className="mt-2 text-3xl font-bold">{formatDate(profileUser?.createdAt)}</p>
             </article>
           </div>
 
-          <article className="mt-4 rounded-xl border border-[#2a3248] bg-[#12192a] p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>Inbox</h2>
-              <span className="text-xs text-[#93a1c6]">{messages.length} total</span>
-            </div>
-            <div className="space-y-3">
-              {messages.length === 0 ? (
-                <div className="rounded-lg border border-[#202944] bg-[#0f1527] p-4 text-sm text-[#93a1c6]">
-                  No messages yet.
+          <div className="mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+            <article className="rounded-xl border border-[#2a3248] bg-[#12192a] p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>
+                  Profile Details
+                </h2>
+                <button
+                  type="button"
+                  className="rounded-md border border-[#2d3a5d] px-3 py-1.5 text-xs text-[#d4dcf5] hover:bg-[#1a253d]"
+                >
+                  Edit Profile
+                </button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Full Name</p>
+                  <p className="mt-2 text-sm font-semibold text-[#f6e7c8]">{user.name}</p>
                 </div>
-              ) : (
-                messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`h-2 w-2 rounded-full ${
-                            message.unread ? "bg-emerald-400" : "bg-slate-500"
-                          }`}
-                        />
-                        <p className="truncate font-semibold text-[#e0e6f8]">{message.subject}</p>
-                      </div>
-                      <p className="mt-1 truncate text-xs text-[#93a1c6]">{message.preview}</p>
-                      <p className="mt-2 text-[11px] text-[#62719a]">{message.from}</p>
-                    </div>
-                    <div className="text-xs text-[#93a1c6]">{formatDateTime(message.time)}</div>
-                  </div>
-                ))
-              )}
-            </div>
-          </article>
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Email Address</p>
+                  <p className="mt-2 text-sm font-semibold text-[#f6e7c8]">{user.email}</p>
+                </div>
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Role</p>
+                  <p className="mt-2 text-sm font-semibold text-[#f6e7c8]">Organizer</p>
+                </div>
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Status</p>
+                  <p className="mt-2 text-sm font-semibold text-[#f6e7c8]">Active</p>
+                </div>
+              </div>
+            </article>
+
+            <article className="rounded-xl border border-[#2a3248] bg-[#12192a] p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>
+                  Security
+                </h2>
+                <button
+                  type="button"
+                  className="rounded-md border border-[#2d3a5d] px-3 py-1.5 text-xs text-[#d4dcf5] hover:bg-[#1a253d]"
+                >
+                  Update
+                </button>
+              </div>
+              <div className="space-y-3 text-sm text-[#dce3f8]">
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Password</p>
+                  <p className="mt-2 font-semibold text-[#f6e7c8]">************</p>
+                </div>
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Two-Factor Authentication</p>
+                  <p className="mt-2 font-semibold text-[#f6e7c8]">Not enabled</p>
+                </div>
+                <div className="rounded-lg border border-[#202944] bg-[#0f1527] px-4 py-3">
+                  <p className="text-xs text-[#93a1c6]">Login Alerts</p>
+                  <p className="mt-2 font-semibold text-[#f6e7c8]">Enabled</p>
+                </div>
+              </div>
+            </article>
+          </div>
         </section>
       </div>
     </main>
   );
 }
+
