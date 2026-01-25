@@ -141,16 +141,46 @@ export default async function AdminAnalyticsPage() {
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Revenue Trend</h2>
                 <span className="text-xs text-[#8b93ad]">Last 6 months</span>
               </div>
-              <div className="grid h-[220px] grid-cols-6 items-end gap-2 rounded-lg border border-[#eef1f7] bg-[#f9fafe] p-3">
-                {months.map((month, index) => (
-                  <div key={month} className="flex h-full flex-col justify-end gap-1">
-                    <div
-                      className="w-full rounded-sm bg-[#3b5dd0]"
-                      style={{ height: `${Math.max(revenueTrend[index], 6)}%` }}
-                    />
-                    <p className="pt-1 text-center text-[10px] text-[#7b86a6]">{month}</p>
-                  </div>
-                ))}
+              <div className="rounded-xl border border-[#eef1f7] bg-[#f8f9fd] p-3">
+                <svg viewBox="0 0 640 240" className="h-[220px] w-full">
+                  <defs>
+                    <linearGradient id="revLine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#5b7bff" />
+                      <stop offset="100%" stopColor="#3b5dd0" />
+                    </linearGradient>
+                    <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#5b7bff" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#5b7bff" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <g stroke="#e7eaf4" strokeWidth="1">
+                    {[30, 70, 110, 150, 190].map((y) => (
+                      <line key={y} x1="0" y1={y} x2="640" y2={y} />
+                    ))}
+                  </g>
+                  <path
+                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70"
+                    fill="none"
+                    stroke="url(#revLine)"
+                    strokeWidth="3"
+                  />
+                  <path
+                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70 L640 240 L0 240 Z"
+                    fill="url(#revFill)"
+                  />
+                  <g fill="#4d6bff">
+                    {[100, 200, 300, 400, 500].map((x, index) => (
+                      <circle key={x} cx={x} cy={[125, 140, 115, 130, 90][index]} r="4" />
+                    ))}
+                  </g>
+                  <g fill="#7b86a6" fontSize="10">
+                    {months.map((label, index) => (
+                      <text key={label} x={index * 53} y={230}>
+                        {label}
+                      </text>
+                    ))}
+                  </g>
+                </svg>
               </div>
             </article>
 
@@ -159,16 +189,46 @@ export default async function AdminAnalyticsPage() {
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Attendance Rate</h2>
                 <span className="text-xs text-[#8b93ad]">Last 6 months</span>
               </div>
-              <div className="grid h-[220px] grid-cols-6 items-end gap-2 rounded-lg border border-[#eef1f7] bg-[#f9fafe] p-3">
-                {months.map((month, index) => (
-                  <div key={month} className="flex h-full flex-col justify-end gap-1">
-                    <div
-                      className="w-full rounded-sm bg-[#2f8a62]"
-                      style={{ height: `${Math.max(attendanceTrend[index], 6)}%` }}
-                    />
-                    <p className="pt-1 text-center text-[10px] text-[#7b86a6]">{month}</p>
-                  </div>
-                ))}
+              <div className="rounded-xl border border-[#eef1f7] bg-[#f8f9fd] p-3">
+                <svg viewBox="0 0 640 240" className="h-[220px] w-full">
+                  <defs>
+                    <linearGradient id="attLine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#3bbf8a" />
+                      <stop offset="100%" stopColor="#2f8a62" />
+                    </linearGradient>
+                    <linearGradient id="attFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3bbf8a" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#3bbf8a" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <g stroke="#e7eaf4" strokeWidth="1">
+                    {[30, 70, 110, 150, 190].map((y) => (
+                      <line key={y} x1="0" y1={y} x2="640" y2={y} />
+                    ))}
+                  </g>
+                  <path
+                    d="M0 170 C40 150 70 140 100 145 C140 150 160 170 200 155 C240 140 270 120 300 130 C340 145 360 155 400 140 C440 125 470 110 500 115 C540 120 570 110 600 108 C620 107 630 105 640 102"
+                    fill="none"
+                    stroke="url(#attLine)"
+                    strokeWidth="3"
+                  />
+                  <path
+                    d="M0 170 C40 150 70 140 100 145 C140 150 160 170 200 155 C240 140 270 120 300 130 C340 145 360 155 400 140 C440 125 470 110 500 115 C540 120 570 110 600 108 C620 107 630 105 640 102 L640 240 L0 240 Z"
+                    fill="url(#attFill)"
+                  />
+                  <g fill="#2f8a62">
+                    {[100, 200, 300, 400, 500].map((x, index) => (
+                      <circle key={x} cx={x} cy={[145, 155, 130, 140, 115][index]} r="4" />
+                    ))}
+                  </g>
+                  <g fill="#7b86a6" fontSize="10">
+                    {months.map((label, index) => (
+                      <text key={label} x={index * 53} y={230}>
+                        {label}
+                      </text>
+                    ))}
+                  </g>
+                </svg>
               </div>
             </article>
           </div>

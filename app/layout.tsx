@@ -28,6 +28,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var stored = localStorage.getItem("organizer-theme");
+                  var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                  var theme = stored || (prefersDark ? "dark" : "light");
+                  document.documentElement.dataset.organizerTheme = theme;
+                  document.body.dataset.organizerTheme = theme;
+                  document.body.classList.toggle("organizer-dark", theme === "dark");
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <AosProvider />
         {children}
       </body>

@@ -200,20 +200,61 @@ export default async function AdminDashboardPage() {
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Event Statistics</h2>
                 <span className="text-xs text-[#8b93ad]">Last 6 months</span>
               </div>
-              <div className="grid h-[220px] grid-cols-6 items-end gap-2 rounded-lg border border-[#eef1f7] bg-[#f9fafe] p-3">
-                {overviewMonths.map((month, index) => (
-                  <div key={month} className="flex h-full flex-col justify-end gap-1">
-                    <div
-                      className="w-full rounded-sm bg-[#3b5dd0]"
-                      style={{ height: `${Math.max(bookingsTrend[index], 4)}%` }}
-                    />
-                    <div
-                      className="w-full rounded-sm bg-[#f2b94b]"
-                      style={{ height: `${Math.max(revenueTrend[index], 4)}%` }}
-                    />
-                    <p className="pt-1 text-center text-[10px] text-[#7b86a6]">{month}</p>
-                  </div>
-                ))}
+              <div className="rounded-xl border border-[#eef1f7] bg-[#f8f9fd] p-3">
+                <svg viewBox="0 0 640 240" className="h-[220px] w-full">
+                  <defs>
+                    <linearGradient id="statLine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#5b7bff" />
+                      <stop offset="100%" stopColor="#3b5dd0" />
+                    </linearGradient>
+                    <linearGradient id="statFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#5b7bff" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#5b7bff" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="statLine2" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#b9c7ff" />
+                      <stop offset="100%" stopColor="#8ea3e8" />
+                    </linearGradient>
+                  </defs>
+
+                  <g stroke="#e7eaf4" strokeWidth="1">
+                    {[30, 70, 110, 150, 190].map((y) => (
+                      <line key={y} x1="0" y1={y} x2="640" y2={y} />
+                    ))}
+                  </g>
+
+                  <path
+                    d="M0 170 C40 130 70 120 100 130 C140 145 160 180 200 160 C240 140 270 120 300 130 C340 145 360 170 400 150 C440 130 470 100 500 110 C540 120 570 110 600 105 C620 102 630 100 640 96"
+                    fill="none"
+                    stroke="url(#statLine2)"
+                    strokeWidth="2"
+                  />
+
+                  <path
+                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70"
+                    fill="none"
+                    stroke="url(#statLine)"
+                    strokeWidth="3"
+                  />
+                  <path
+                    d="M0 180 C40 140 70 120 100 125 C140 132 160 160 200 140 C240 120 270 100 300 115 C340 135 360 150 400 130 C440 110 470 80 500 90 C540 100 570 85 600 82 C620 80 630 75 640 70 L640 240 L0 240 Z"
+                    fill="url(#statFill)"
+                  />
+
+                  <g fill="#4d6bff">
+                    {[100, 200, 300, 400, 500].map((x, index) => (
+                      <circle key={x} cx={x} cy={[125, 140, 115, 130, 90][index]} r="4" />
+                    ))}
+                  </g>
+
+                  <g fill="#7b86a6" fontSize="10">
+                    {overviewMonths.map((label, index) => (
+                      <text key={label} x={index * 53} y={230}>
+                        {label}
+                      </text>
+                    ))}
+                  </g>
+                </svg>
               </div>
             </article>
           </div>
