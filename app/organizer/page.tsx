@@ -141,7 +141,7 @@ export default async function OrganizerDashboardPage() {
               { label: "Dashboard", href: "/organizer", active: true },
               { label: "My Events", href: "/organizer/my-events", active: false },
               { label: "Bookings", href: "/organizer/bookings", active: false },
-              { label: "Attendees", href: "#", active: false },
+              { label: "Attendees", href: "/organizer/attendees", active: false },
               { label: "Messages", href: "#", active: false },
               { label: "My Profile", href: "#", active: false },
             ].map((item) => (

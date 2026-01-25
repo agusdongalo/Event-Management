@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { RegistrationStatus } from "@prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { LogoutButton } from "@/components/logout-button";
@@ -15,41 +16,75 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-function formatDateTime(value: Date) {
-  return value.toLocaleString("en-US", {
+function formatDate(value: Date) {
+  return value.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   });
 }
 
-export default async function OrganizerMyEventsPage() {
+type AttendeeSummary = {
+  id: string;
+  name: string;
+  email: string;
+  totalBookings: number;
+  upcomingBookings: number;
+  lastBookedAt: Date | null;
+};
+
+export default async function OrganizerAttendeesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role !== "ORGANIZER") redirect("/");
 
   const now = new Date();
-  const events = await prisma.event.findMany({
-    where: { organizerId: user.id },
-    orderBy: { startAt: "asc" },
+  const registrations = await prisma.registration.findMany({
+    where: {
+      status: RegistrationStatus.REGISTERED,
+      event: { organizerId: user.id },
+    },
+    orderBy: { createdAt: "desc" },
     select: {
-      id: true,
-      title: true,
-      startAt: true,
-      venue: true,
-      onlineUrl: true,
-      capacity: true,
-      _count: { select: { registrations: true } },
+      createdAt: true,
+      user: { select: { id: true, name: true, email: true } },
+      event: { select: { startAt: true } },
     },
   });
 
-  const totalEvents = events.length;
-  const upcomingEvents = events.filter((event) => event.startAt >= now).length;
-  const pastEvents = totalEvents - upcomingEvents;
-  const totalRegistrations = events.reduce((sum, event) => sum + event._count.registrations, 0);
+  const attendees = new Map<string, AttendeeSummary>();
+  for (const registration of registrations) {
+    const attendeeId = registration.user.id;
+    const existing = attendees.get(attendeeId);
+    const isUpcoming = registration.event.startAt >= now;
+    if (!existing) {
+      attendees.set(attendeeId, {
+        id: attendeeId,
+        name: registration.user.name,
+        email: registration.user.email,
+        totalBookings: 1,
+        upcomingBookings: isUpcoming ? 1 : 0,
+        lastBookedAt: registration.createdAt,
+      });
+      continue;
+    }
+    existing.totalBookings += 1;
+    if (isUpcoming) existing.upcomingBookings += 1;
+    if (!existing.lastBookedAt || registration.createdAt > existing.lastBookedAt) {
+      existing.lastBookedAt = registration.createdAt;
+    }
+  }
+
+  const attendeeList = Array.from(attendees.values()).sort((a, b) =>
+    (b.lastBookedAt?.getTime() ?? 0) - (a.lastBookedAt?.getTime() ?? 0)
+  );
+
+  const totalAttendees = attendeeList.length;
+  const totalBookings = registrations.length;
+  const upcomingBookings = attendeeList.reduce((sum, attendee) => sum + attendee.upcomingBookings, 0);
+  const avgBookings =
+    totalAttendees === 0 ? 0 : Number((totalBookings / totalAttendees).toFixed(1));
 
   return (
     <main className={`${bodyFont.className} min-h-screen bg-[#090b11] text-[#f3eee6]`}>
@@ -68,9 +103,9 @@ export default async function OrganizerMyEventsPage() {
           <nav className="mt-6 space-y-2 text-sm">
             {[
               { label: "Dashboard", href: "/organizer", active: false },
-              { label: "My Events", href: "/organizer/my-events", active: true },
+              { label: "My Events", href: "/organizer/my-events", active: false },
               { label: "Bookings", href: "/organizer/bookings", active: false },
-              { label: "Attendees", href: "/organizer/attendees", active: false },
+              { label: "Attendees", href: "/organizer/attendees", active: true },
               { label: "Messages", href: "#", active: false },
               { label: "My Profile", href: "#", active: false },
             ].map((item) => (
@@ -101,7 +136,7 @@ export default async function OrganizerMyEventsPage() {
             <div className="flex h-12 w-full max-w-xl items-center gap-2 rounded-xl border border-[#222c48] bg-[#0f1527] px-3">
               <span className="text-[#93a1c6]">S</span>
               <input
-                placeholder="Search events..."
+                placeholder="Search attendees..."
                 className="h-full w-full bg-transparent text-sm text-[#f3eee6] outline-none placeholder:text-[#7f8cad]"
               />
             </div>
@@ -126,94 +161,71 @@ export default async function OrganizerMyEventsPage() {
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#2c2d75_0%,#3d4cb5_100%)] p-4">
-              <p className="text-xs text-[#dce2ff]">Total Events</p>
-              <p className="mt-2 text-3xl font-bold">{totalEvents}</p>
+              <p className="text-xs text-[#dce2ff]">Total Attendees</p>
+              <p className="mt-2 text-3xl font-bold">{totalAttendees}</p>
             </article>
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#1f5d4a_0%,#28846b_100%)] p-4">
-              <p className="text-xs text-[#d9fff4]">Upcoming</p>
-              <p className="mt-2 text-3xl font-bold">{upcomingEvents}</p>
-            </article>
-            <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#6a4321_0%,#8d5f31_100%)] p-4">
-              <p className="text-xs text-[#fff0dd]">Past Events</p>
-              <p className="mt-2 text-3xl font-bold">{pastEvents}</p>
+              <p className="text-xs text-[#d9fff4]">Total Bookings</p>
+              <p className="mt-2 text-3xl font-bold">{totalBookings}</p>
             </article>
             <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#21506a_0%,#2b7b9d_100%)] p-4">
-              <p className="text-xs text-[#ddf4ff]">Total Registrations</p>
-              <p className="mt-2 text-3xl font-bold">{totalRegistrations}</p>
+              <p className="text-xs text-[#ddf4ff]">Upcoming Bookings</p>
+              <p className="mt-2 text-3xl font-bold">{upcomingBookings}</p>
+            </article>
+            <article className="rounded-xl border border-[#2a3248] bg-[linear-gradient(135deg,#6a4321_0%,#8d5f31_100%)] p-4">
+              <p className="text-xs text-[#fff0dd]">Avg. Bookings</p>
+              <p className="mt-2 text-3xl font-bold">{avgBookings}</p>
             </article>
           </div>
 
           <article className="mt-4 rounded-xl border border-[#2a3248] bg-[#12192a] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>My Events</h2>
-              <span className="text-xs text-[#93a1c6]">{events.length} total</span>
+              <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>Attendees</h2>
+              <span className="text-xs text-[#93a1c6]">{attendeeList.length} total</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="text-[#93a1c6]">
-                    <th className="pb-2">Event</th>
-                    <th className="pb-2">Date & Time</th>
-                    <th className="pb-2">Venue</th>
-                    <th className="pb-2">Capacity</th>
-                    <th className="pb-2">Booked</th>
+                    <th className="pb-2">Attendee</th>
+                    <th className="pb-2">Total Bookings</th>
+                    <th className="pb-2">Upcoming</th>
+                    <th className="pb-2">Last Booked</th>
                     <th className="pb-2">Status</th>
-                    <th className="pb-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="text-[#e0e6f8]">
-                  {events.length === 0 ? (
+                  {attendeeList.length === 0 ? (
                     <tr>
-                      <td className="py-3" colSpan={7}>
-                        You have not created any events yet.
+                      <td className="py-3" colSpan={5}>
+                        No attendees yet.
                       </td>
                     </tr>
                   ) : (
-                    events.map((event) => {
-                      const isUpcoming = event.startAt >= now;
-                      return (
-                        <tr key={event.id} className="border-t border-[#202944]">
-                          <td className="py-3 font-medium">{event.title}</td>
-                          <td className="py-3 text-[#b4bfdc]">{formatDateTime(event.startAt)}</td>
-                          <td className="py-3">
-                            {event.onlineUrl ? (
-                              <span className="text-[#b4bfdc]">Online ({event.onlineUrl})</span>
-                            ) : (
-                              <span className="text-[#b4bfdc]">{event.venue}</span>
-                            )}
-                          </td>
-                          <td className="py-3">{event.capacity}</td>
-                          <td className="py-3">{event._count.registrations}</td>
-                          <td className="py-3">
-                            <span
-                              className={`rounded-full px-2 py-1 text-xs ${
-                                isUpcoming
-                                  ? "bg-emerald-500/20 text-emerald-200"
-                                  : "bg-slate-500/20 text-slate-200"
-                              }`}
-                            >
-                              {isUpcoming ? "Upcoming" : "Completed"}
-                            </span>
-                          </td>
-                          <td className="py-3">
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                className="rounded-md border border-[#2d3a5d] px-2 py-1 text-xs text-[#d4dcf5] hover:bg-[#1a253d]"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                className="rounded-md border border-[#2d3a5d] px-2 py-1 text-xs text-[#d4dcf5] hover:bg-[#1a253d]"
-                              >
-                                View
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
+                    attendeeList.map((attendee) => (
+                      <tr key={attendee.id} className="border-t border-[#202944]">
+                        <td className="py-3">
+                          <div className="font-medium">{attendee.name}</div>
+                          <div className="text-xs text-[#93a1c6]">{attendee.email}</div>
+                        </td>
+                        <td className="py-3">{attendee.totalBookings}</td>
+                        <td className="py-3">{attendee.upcomingBookings}</td>
+                        <td className="py-3 text-[#b4bfdc]">
+                          {attendee.lastBookedAt ? formatDate(attendee.lastBookedAt) : "—"}
+                        </td>
+                        <td className="py-3">
+                          <span
+                            className={`rounded-full px-2 py-1 text-xs ${
+                              attendee.upcomingBookings > 0
+                                ? "bg-emerald-500/20 text-emerald-200"
+                                : "bg-slate-500/20 text-slate-200"
+                            }`}
+                          >
+                            {attendee.upcomingBookings > 0 ? "Active" : "Dormant"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
