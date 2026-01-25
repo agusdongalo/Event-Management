@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { ThemeToggleButton } from "@/components/theme-toggle";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -70,9 +71,9 @@ export default async function OrganizerMessagesPage() {
   const unreadCount = messages.filter((message) => message.unread).length;
 
   return (
-    <main className={`${bodyFont.className} min-h-screen bg-[#f4f5fb] text-[#0d1021]`}>
+    <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
       <div className="grid min-h-screen md:grid-cols-[260px_1fr]">
-        <aside className="bg-[linear-gradient(180deg,#2b3f66_0%,#1b2a4a_45%,#13223b_100%)] px-5 py-6 text-white">
+        <aside className="bg-[linear-gradient(180deg,#2b3f66_0%,#1b2a4a_45%,#13223b_100%)] organizer-nav px-5 py-6 text-white">
           <div className="flex items-center gap-3 pb-5">
             <div className="grid h-11 w-11 place-items-center rounded-full bg-white/10 text-xs font-semibold uppercase tracking-[0.28em]">
               SE
@@ -129,7 +130,7 @@ export default async function OrganizerMessagesPage() {
           />
         </aside>
 
-        <section className="p-5 md:p-7">
+        <section className="organizer-content p-5 md:p-7">
           <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div className="flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
               <span className="text-[#8b93ad]">S</span>
@@ -165,34 +166,7 @@ export default async function OrganizerMessagesPage() {
                   <path d="M5 17h14" />
                 </svg>
               </button>
-              <button
-                type="button"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white bg-white text-[#51607f] shadow-sm"
-                aria-label="Theme"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.5A9 9 0 1111.5 3a7 7 0 109.5 9.5z" />
-                  <text
-                    x="11.5"
-                    y="14"
-                    textAnchor="middle"
-                    fontSize="8"
-                    fill="currentColor"
-                    stroke="none"
-                  >
-                    C
-                  </text>
-                </svg>
-              </button>
+              <ThemeToggleButton />
               <div className="flex items-center gap-3 rounded-full bg-white px-3 py-1.5 shadow-sm">
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f4ff] text-sm font-semibold text-[#4a5b87]">
                   {user.name.slice(0, 1).toUpperCase()}
@@ -251,4 +225,12 @@ export default async function OrganizerMessagesPage() {
     </main>
   );
 }
+
+
+
+
+
+
+
+
 
