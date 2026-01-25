@@ -18,6 +18,14 @@ export default async function Home() {
 
   const navActions = user ? (
     <div className="flex items-center gap-3">
+      {user.role === "ADMIN" ? (
+        <Link
+          href="/admin"
+          className="rounded-full border border-[#ead8b4] bg-black/35 px-4 py-1 text-xs font-extrabold tracking-wide text-[#f8efde] transition hover:bg-black/50"
+        >
+          ADMIN
+        </Link>
+      ) : null}
       <span className="hidden text-sm text-white/90 md:inline">{user.name}</span>
       <LogoutButton />
     </div>
