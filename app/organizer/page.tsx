@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { RegistrationStatus } from "@prisma/client";
 import { getCurrentUser } from "@/lib/auth";
@@ -136,20 +137,26 @@ export default async function OrganizerDashboardPage() {
           </div>
 
           <nav className="mt-6 space-y-2 text-sm">
-            {["Dashboard", "My Events", "Bookings", "Attendees", "Messages", "My Profile"].map(
-              (item, index) => (
-                <div
-                  key={item}
-                  className={`rounded-lg px-3 py-2 ${
-                    index === 0
-                      ? "bg-[#d8b26f]/20 text-[#f6e7c8]"
-                      : "text-[#b4bfdc] hover:bg-[#1a253d] hover:text-[#f6e7c8]"
-                  }`}
-                >
-                  {item}
-                </div>
-              )
-            )}
+            {[
+              { label: "Dashboard", href: "/organizer", active: true },
+              { label: "My Events", href: "/organizer/my-events", active: false },
+              { label: "Bookings", href: "/organizer/bookings", active: false },
+              { label: "Attendees", href: "#", active: false },
+              { label: "Messages", href: "#", active: false },
+              { label: "My Profile", href: "#", active: false },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`block rounded-lg px-3 py-2 ${
+                  item.active
+                    ? "bg-[#d8b26f]/20 text-[#f6e7c8]"
+                    : "text-[#b4bfdc] hover:bg-[#1a253d] hover:text-[#f6e7c8]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           <LogoutButton
@@ -221,7 +228,9 @@ export default async function OrganizerDashboardPage() {
                 <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>
                   My Upcoming Events
                 </h2>
-                <span className="text-xs text-[#93a1c6]">View All</span>
+                <Link href="/organizer/my-events" className="text-xs text-[#93a1c6] hover:text-[#c6d3f5]">
+                  View All
+                </Link>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -291,7 +300,9 @@ export default async function OrganizerDashboardPage() {
             <article className="rounded-xl border border-[#2a3248] bg-[#12192a] p-4">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8]`}>Recent Bookings</h2>
-                <span className="text-xs text-[#93a1c6]">View All</span>
+                <Link href="/organizer/bookings" className="text-xs text-[#93a1c6] hover:text-[#c6d3f5]">
+                  View All
+                </Link>
               </div>
               <div className="mt-3 space-y-2 text-sm">
                 {recentBookings.length === 0 ? (
