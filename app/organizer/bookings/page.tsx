@@ -89,7 +89,7 @@ export default async function OrganizerBookingsPage() {
               { label: "My Events", href: "/organizer/my-events", active: false },
               { label: "Bookings", href: "/organizer/bookings", active: true },
               { label: "Attendees", href: "/organizer/attendees", active: false },
-              { label: "Messages", href: "#", active: false },
+              { label: "Messages", href: "/organizer/messages", active: false },
               { label: "My Profile", href: "#", active: false },
             ].map((item) => (
               <Link
