@@ -65,7 +65,8 @@ export function AuthForm({ mode }: AuthFormProps) {
       return;
     }
 
-    const targetPath = data.user?.role === "ADMIN" ? "/admin" : "/";
+    const targetPath =
+      data.user?.role === "ADMIN" ? "/admin" : data.user?.role === "ORGANIZER" ? "/organizer" : "/";
     router.push(targetPath);
     router.refresh();
   }

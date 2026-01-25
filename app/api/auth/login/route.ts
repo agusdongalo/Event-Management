@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSession, verifyPassword } from "@/lib/auth";
+import { createSession, hashPassword, verifyPassword } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 type LoginBody = {
@@ -31,7 +31,23 @@ export async function POST(request: Request) {
       },
     });
 
-    if (!user || !verifyPassword(password, user.passwordHash)) {
+    if (!user) {
+      return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+    }
+
+    let isValidPassword = verifyPassword(password, user.passwordHash);
+
+    // Dev-friendly fallback: allow legacy/plaintext DB records once, then upgrade to secure hash.
+    if (!isValidPassword && !user.passwordHash.includes(":") && user.passwordHash === password) {
+      const upgradedHash = hashPassword(password);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordHash: upgradedHash },
+      });
+      isValidPassword = true;
+    }
+
+    if (!isValidPassword) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
