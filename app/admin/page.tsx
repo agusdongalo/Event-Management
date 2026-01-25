@@ -256,6 +256,16 @@ export default async function AdminDashboardPage() {
                     ))}
                   </g>
                 </svg>
+                <div className="mt-2 flex items-center justify-between text-[10px] text-[#7b86a6]">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-[#4f6bff]" />
+                    Bookings
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-[#97a9e8]" />
+                    Revenue
+                  </div>
+                </div>
               </div>
             </article>
           </div>
