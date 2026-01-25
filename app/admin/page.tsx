@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { RegistrationStatus } from "@prisma/client";
@@ -140,26 +139,50 @@ export default async function AdminDashboardPage() {
               )
             )}
           </nav>
+
+          <LogoutButton
+            containerClassName="mt-6 flex flex-col gap-1"
+            className="w-fit rounded-md border border-[#f0f3ff] px-3 py-2 text-xs font-semibold text-[#f8f9ff] transition hover:bg-white/10 disabled:opacity-60"
+            errorClassName="text-[11px] text-rose-300"
+            redirectTo="/"
+          />
         </aside>
 
         <section className="p-4 md:p-6">
-          <header className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#2a3248] bg-[#12192a] px-4 py-3">
-            <input
-              placeholder="Search events, attendees..."
-              className="h-10 w-full max-w-md rounded-md border border-[#2a3248] bg-[#0f1527] px-3 text-sm text-[#f3eee6] outline-none placeholder:text-[#7f8cad] focus:border-[#d8b26f]"
-            />
-            <div className="flex items-center gap-3">
-              <Link
-                href="/"
-                className="rounded-md border border-[#2a3248] px-3 py-2 text-xs text-[#b4bfdc] hover:border-[#d8b26f] hover:text-[#f6e7c8]"
+          <header className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#2a3248] bg-[#12192a] p-3 md:p-4">
+            <div className="flex h-12 w-full max-w-xl items-center gap-2 rounded-xl border border-[#222c48] bg-[#0f1527] px-3">
+              <span className="text-[#93a1c6]">⌕</span>
+              <input
+                placeholder="Search task"
+                className="h-full w-full bg-transparent text-sm text-[#f3eee6] outline-none placeholder:text-[#7f8cad]"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 md:gap-3">
+              <button
+                type="button"
+                className="grid h-10 w-10 place-items-center rounded-full border border-[#222c48] bg-[#0f1527] text-sm text-[#b4bfdc] hover:text-[#f6e7c8]"
+                aria-label="Messages"
               >
-                Homepage
-              </Link>
-              <div className="text-right text-xs">
-                <p className="text-[#93a1c6]">Signed in as</p>
-                <p className="font-semibold text-[#f6e7c8]">{user.name}</p>
+                ✉
+              </button>
+              <button
+                type="button"
+                className="grid h-10 w-10 place-items-center rounded-full border border-[#222c48] bg-[#0f1527] text-sm text-[#b4bfdc] hover:text-[#f6e7c8]"
+                aria-label="Notifications"
+              >
+                🔔
+              </button>
+
+              <div className="flex items-center gap-3 rounded-xl border border-[#222c48] bg-[#0f1527] px-2 py-1.5">
+                <div className="grid h-10 w-10 place-items-center rounded-full border border-[#d8b26f] bg-[#d8b26f]/15 text-sm font-bold text-[#f6e7c8]">
+                  {user.name.slice(0, 1).toUpperCase()}
+                </div>
+                <div className="pr-1 text-xs">
+                  <p className="font-semibold text-[#f6e7c8]">{user.name}</p>
+                  <p className="text-[#93a1c6]">{user.email}</p>
+                </div>
               </div>
-              <LogoutButton />
             </div>
           </header>
 

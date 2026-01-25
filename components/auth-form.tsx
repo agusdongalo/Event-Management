@@ -55,14 +55,18 @@ export function AuthForm({ mode }: AuthFormProps) {
       body: JSON.stringify(payload),
     });
 
-    const data = (await response.json()) as { error?: string };
+    const data = (await response.json()) as {
+      error?: string;
+      user?: { role?: "ADMIN" | "ORGANIZER" | "USER" };
+    };
     if (!response.ok) {
       setError(data.error ?? "Authentication failed.");
       setLoading(false);
       return;
     }
 
-    router.push("/");
+    const targetPath = data.user?.role === "ADMIN" ? "/admin" : "/";
+    router.push(targetPath);
     router.refresh();
   }
 
