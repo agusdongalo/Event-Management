@@ -152,16 +152,6 @@ export default async function OrganizerDashboardPage() {
             )}
           </nav>
 
-          <div className="mt-8 flex items-center gap-3 rounded-xl border border-[#243255] bg-[#0f1527] px-3 py-2">
-            <div className="grid h-9 w-9 place-items-center rounded-full border border-[#d8b26f] bg-[#d8b26f]/15 text-xs font-semibold text-[#f6e7c8]">
-              {user.name.slice(0, 1).toUpperCase()}
-            </div>
-            <div className="min-w-0 text-xs">
-              <p className="truncate font-semibold text-[#f6e7c8]">{user.name}</p>
-              <p className="truncate text-[#93a1c6]">Event Manager</p>
-            </div>
-          </div>
-
           <LogoutButton
             containerClassName="mt-4 flex flex-col gap-1"
             className="w-fit rounded-md border border-[#f0f3ff] px-3 py-2 text-xs font-semibold text-[#f8f9ff] transition hover:bg-white/10 disabled:opacity-60"
