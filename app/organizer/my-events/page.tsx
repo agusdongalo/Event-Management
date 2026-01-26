@@ -4,6 +4,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { prisma } from "@/lib/prisma";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -15,31 +16,30 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const statCards = [
-  {
-    title: "Total Events",
-    value: "0",
-    tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
-  },
-  {
-    title: "Upcoming",
-    value: "0",
-    tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
-  },
-  {
-    title: "Past Events",
-    value: "0",
-    tone: "from-[#b2772e] via-[#a56a26] to-[#935f20]",
-  },
-  {
-    title: "Total Registrations",
-    value: "0",
-    tone: "from-[#2b6f96] via-[#2c7aa6] to-[#2f86b5]",
-  },
-];
+const formatDateTime = (date: Date) =>
+  date.toLocaleString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-const emptyStateRow = {
-  message: "You have not created any events yet.",
+const formatStatus = (status: string) => {
+  switch (status) {
+    case "LIVE":
+      return "Live";
+    case "DRAFT":
+      return "Draft";
+    default:
+      return "Upcoming";
+  }
+};
+
+const getStartOfToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
 };
 
 export default async function OrganizerMyEventsPage() {
@@ -48,6 +48,47 @@ export default async function OrganizerMyEventsPage() {
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role !== "ORGANIZER") redirect("/");
 
+  const events = await prisma.event.findMany({
+    where: { organizerId: user.id },
+    orderBy: { startAt: "desc" },
+    include: {
+      _count: {
+        select: { registrations: true },
+      },
+    },
+  });
+
+  const today = getStartOfToday();
+  const totalEvents = events.length;
+  const upcomingEvents = events.filter((event) => event.startAt >= today).length;
+  const pastEvents = events.filter((event) => event.startAt < today).length;
+  const totalRegistrations = events.reduce(
+    (total, event) => total + event._count.registrations,
+    0
+  );
+
+  const statCards = [
+    {
+      title: "Total Events",
+      value: totalEvents.toString(),
+      tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
+    },
+    {
+      title: "Upcoming",
+      value: upcomingEvents.toString(),
+      tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
+    },
+    {
+      title: "Past Events",
+      value: pastEvents.toString(),
+      tone: "from-[#b2772e] via-[#a56a26] to-[#935f20]",
+    },
+    {
+      title: "Total Registrations",
+      value: totalRegistrations.toString(),
+      tone: "from-[#2b6f96] via-[#2c7aa6] to-[#2f86b5]",
+    },
+  ];
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
       <div className="grid min-h-screen md:grid-cols-[260px_1fr]">
@@ -172,7 +213,7 @@ export default async function OrganizerMyEventsPage() {
           <article className="mt-4 rounded-xl bg-white p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>My Events</h2>
-              <span className="text-xs text-[#5a6ca3]">0 total</span>
+              <span className="text-xs text-[#5a6ca3]">{events.length} total</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
@@ -188,11 +229,35 @@ export default async function OrganizerMyEventsPage() {
                   </tr>
                 </thead>
                 <tbody className="text-[#243054]">
-                  <tr className="border-t border-[#eef1f7]">
-                    <td className="py-3" colSpan={7}>
-                      {emptyStateRow.message}
-                    </td>
-                  </tr>
+                  {events.length === 0 ? (
+                    <tr className="border-t border-[#eef1f7]">
+                      <td className="py-3" colSpan={7}>
+                        You have not created any events yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    events.map((event) => (
+                      <tr key={event.id} className="border-t border-[#eef1f7]">
+                        <td className="py-3">
+                          <div>
+                            <p className="font-medium">{event.title}</p>
+                          </div>
+                        </td>
+                        <td className="py-3 text-[#6b7593]">{formatDateTime(event.startAt)}</td>
+                        <td className="py-3">{event.venue}</td>
+                        <td className="py-3">{event.capacity}</td>
+                        <td className="py-3">{event._count.registrations}</td>
+                        <td className="py-3">
+                          <span className="w-fit rounded-full bg-[#edf1ff] px-2 py-1 text-xs text-[#4b5bd4]">
+                            {formatStatus(event.status)}
+                          </span>
+                        </td>
+                        <td className="py-3 text-xs text-[#5a6ca3]">
+                          <Link href={`/events/${event.id}`}>View</Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

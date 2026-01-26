@@ -3,6 +3,10 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import AdminEventsClient from "./admin-events-client";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -14,7 +18,7 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const events = [
+const fallbackEvents = [
   {
     title: "Executive Summit",
     date: "Mar 08, 2026",
@@ -45,10 +49,49 @@ const events = [
   },
 ];
 
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+
+const formatStatus = (status: string) => {
+  switch (status) {
+    case "LIVE":
+      return "Live";
+    case "DRAFT":
+      return "Draft";
+    default:
+      return "Upcoming";
+  }
+};
+
 export default async function AdminEventsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  const organizers = await prisma.user.findMany({
+    where: { role: "ORGANIZER" },
+    select: { id: true, name: true, email: true },
+    orderBy: { name: "asc" },
+  });
+  const validOrganizers = organizers.filter((organizer) => organizer.id.trim().length > 0);
+
+  const dbEvents = await prisma.event.findMany({
+    orderBy: { startAt: "desc" },
+  });
+  const events =
+    dbEvents.length > 0
+      ? dbEvents.map((event) => ({
+          title: event.title,
+          date: formatDate(event.startAt),
+          venue: event.venue,
+          status: formatStatus(event.status),
+          seats: event.capacity,
+        }))
+      : fallbackEvents;
 
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
@@ -138,61 +181,8 @@ export default async function AdminEventsPage() {
             </div>
           </header>
 
-          <div className="relative z-0 mb-4 grid gap-3 md:grid-cols-[1.2fr_0.6fr_0.4fr]">
-            <div className="organizer-top-shadow flex h-11 items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
-              <span className="text-[#8b93ad]">⌕</span>
-              <input
-                placeholder="Search events"
-                className="h-full w-full bg-transparent text-sm text-[#1a1f35] outline-none placeholder:text-[#9aa2b6]"
-              />
-            </div>
-            <select className="organizer-top-shadow h-11 rounded-xl border border-transparent bg-white px-3 text-sm text-[#4a5b87] outline-none shadow-sm">
-              <option>All statuses</option>
-              <option>Live</option>
-              <option>Upcoming</option>
-              <option>Draft</option>
-            </select>
-            <button className="organizer-top-shadow h-11 rounded-xl bg-[#3b5dd0] text-sm font-semibold text-white shadow-md">
-              + Add Event
-            </button>
-          </div>
+          <AdminEventsClient initialEvents={events} organizers={validOrganizers} />
 
-          <div className="organizer-top-shadow relative z-10 rounded-2xl bg-white p-4 shadow-sm">
-            <div className="grid gap-2 text-sm font-semibold text-[#4a5b87] sm:grid-cols-[2fr_1fr_1fr_1fr]">
-              <span>Event</span>
-              <span>Date</span>
-              <span>Status</span>
-              <span>Seats Left</span>
-            </div>
-            <div className="mt-3 space-y-2">
-              {events.map((event) => (
-                <div
-                  key={event.title}
-                  className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[2fr_1fr_1fr_1fr]"
-                >
-                  <div>
-                    <p className="font-medium">{event.title}</p>
-                    <p className="text-xs text-[#7b86a6]">{event.venue}</p>
-                  </div>
-                  <span className="text-[#6b7593]">{event.date}</span>
-                  <span
-                    className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
-                      event.status === "Live"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : event.status === "Upcoming"
-                          ? "bg-sky-100 text-sky-700"
-                          : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {event.status}
-                  </span>
-                  <span className="w-fit rounded-full bg-[#ede9ff] px-2 py-1 text-xs text-[#5c53d6] organizer-badge">
-                    {event.seats}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
         </section>
       </div>
     </main>
