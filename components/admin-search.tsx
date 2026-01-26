@@ -49,6 +49,7 @@ export function AdminSearch() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   const results = useMemo(() => {
     const normalized = normalize(query);
@@ -71,13 +72,15 @@ export function AdminSearch() {
   return (
     <div className="relative z-30 w-full max-w-xl">
       <div className="organizer-top-shadow relative flex h-11 w-full items-center rounded-xl border border-transparent bg-white px-3 shadow-sm">
-        {open ? (
+        {query.trim() || focused ? (
           <button
             type="button"
             aria-label="Clear search"
-            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 text-[#8b93ad]"
+            className="search-back-btn absolute left-3 top-1/2 z-10 -translate-y-1/2 text-[#8b93ad]"
             onClick={() => {
+              setQuery("");
               setOpen(false);
+              setFocused(false);
             }}
           >
             <svg
@@ -98,8 +101,14 @@ export function AdminSearch() {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 120)}
+          onFocus={() => {
+            setFocused(true);
+            setOpen(true);
+          }}
+          onBlur={() => {
+            setFocused(false);
+            setTimeout(() => setOpen(false), 120);
+          }}
           placeholder="Search task"
           className="search-input h-full w-full bg-transparent pl-10 pr-12 text-sm text-[#1a1f35] outline-none placeholder:text-[#9aa2b6]"
         />

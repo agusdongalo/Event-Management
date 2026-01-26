@@ -289,6 +289,16 @@ body.organizer-dark .organizer-content select {
   color: #e6edf7;
 }
 
+body.organizer-dark .organizer-content .search-icon-btn span {
+  background-color: #1c2333;
+  color: #e6edf7;
+  box-shadow: 0 6px 16px rgba(5, 8, 15, 0.6);
+}
+
+body.organizer-dark .organizer-content .search-back-btn {
+  color: #e6edf7;
+}
+
 body.organizer-dark .organizer-content input::placeholder,
 body.organizer-dark .organizer-content textarea::placeholder {
   color: #7f8aa3;
