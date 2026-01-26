@@ -3,6 +3,9 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -14,48 +17,45 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const attendees = [
-  {
-    name: "Aria Summers",
-    email: "aria.summers@example.com",
-    tier: "VIP",
-    status: "Checked In",
-    event: "Executive Summit",
-  },
-  {
-    name: "Daniel Reed",
-    email: "daniel.reed@example.com",
-    tier: "Premium",
-    status: "Arriving",
-    event: "Founder Dinner",
-  },
-  {
-    name: "Sofia Lin",
-    email: "sofia.lin@example.com",
-    tier: "VIP",
-    status: "Checked In",
-    event: "Luxury Brand Gala",
-  },
-  {
-    name: "Noah Sinclair",
-    email: "noah.sinclair@example.com",
-    tier: "Standard",
-    status: "Registered",
-    event: "Private Art Soiree",
-  },
-  {
-    name: "Lena Hart",
-    email: "lena.hart@example.com",
-    tier: "Premium",
-    status: "Checked In",
-    event: "Luxury Brand Gala",
-  },
-];
+const formatTier = (tier: string) => {
+  switch (tier) {
+    case "VIP":
+      return "VIP";
+    case "PREMIUM":
+      return "Premium";
+    default:
+      return "Standard";
+  }
+};
+
+const formatStatus = (status: string) => {
+  switch (status) {
+    case "PENDING":
+      return "Pending";
+    case "APPROVED":
+    case "REGISTERED":
+      return "Approved";
+    case "REJECTED":
+      return "Rejected";
+    case "CANCELLED":
+      return "Cancelled";
+    default:
+      return status;
+  }
+};
 
 export default async function AdminAttendeesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  const registrations = await prisma.registration.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      user: { select: { name: true, email: true } },
+      event: { select: { title: true } },
+    },
+  });
 
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
@@ -173,40 +173,49 @@ export default async function AdminAttendeesPage() {
               <span>Status</span>
             </div>
             <div className="mt-3 space-y-2">
-              {attendees.map((attendee) => (
-                <div
-                  key={attendee.email}
-                  className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[1.4fr_1fr_0.7fr_0.7fr]"
-                >
-                  <div>
-                    <p className="font-medium">{attendee.name}</p>
-                    <p className="text-xs text-[#7b86a6]">{attendee.email}</p>
-                  </div>
-                  <span className="text-[#6b7593]">{attendee.event}</span>
-                  <span
-                    className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
-                      attendee.tier === "VIP"
-                        ? "bg-[#ede9ff] text-[#5c53d6]"
-                        : attendee.tier === "Premium"
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-slate-100 text-slate-700"
-                    }`}
-                  >
-                    {attendee.tier}
-                  </span>
-                  <span
-                    className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
-                      attendee.status === "Checked In"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : attendee.status === "Arriving"
-                          ? "bg-sky-100 text-sky-700"
-                          : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {attendee.status}
-                  </span>
+              {registrations.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-[#e0e5f2] px-4 py-6 text-center text-sm text-[#6b7593]">
+                  No registrations yet.
                 </div>
-              ))}
+              ) : (
+                registrations.map((registration) => (
+                  <div
+                    key={registration.id}
+                    className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[1.4fr_1fr_0.7fr_0.7fr]"
+                  >
+                    <div>
+                      <p className="font-medium">{registration.user.name}</p>
+                      <p className="text-xs text-[#7b86a6]">{registration.user.email}</p>
+                    </div>
+                    <span className="text-[#6b7593]">{registration.event.title}</span>
+                    <span
+                      className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
+                        registration.tier === "VIP"
+                          ? "bg-[#ede9ff] text-[#5c53d6]"
+                          : registration.tier === "PREMIUM"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-slate-100 text-slate-700"
+                      }`}
+                    >
+                      {formatTier(registration.tier)}
+                    </span>
+                    <span
+                      className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
+                        registration.status === "APPROVED" ||
+                        registration.status === "REGISTERED"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : registration.status === "PENDING"
+                            ? "bg-amber-100 text-amber-700"
+                            : registration.status === "REJECTED"
+                              ? "bg-rose-100 text-rose-700"
+                              : "bg-slate-100 text-slate-700"
+                      }`}
+                    >
+                      {formatStatus(registration.status)}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>

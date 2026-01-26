@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -14,27 +17,61 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const quickStats = [
-  { label: "Active Tickets", value: "3" },
-  { label: "Upcoming Events", value: "2" },
-  { label: "Saved Events", value: "6" },
-];
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
 
-const upcomingEvents = [
-  { name: "Tech Conference 2024", date: "May 12, 2024", status: "Registered" },
-  { name: "Marketing Workshop", date: "Jun 05, 2024", status: "Registered" },
-];
-
-const recentEvents = [
-  { name: "Music Fest", date: "Apr 25, 2024", status: "Attended" },
-  { name: "Corporate Meetup", date: "Apr 10, 2024", status: "Attended" },
-];
+const getStartOfToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
 
 export default async function AttendeeAccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role === "ORGANIZER") redirect("/organizer");
+
+  const registrations = await prisma.registration.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    include: {
+      event: { select: { title: true, startAt: true } },
+    },
+  });
+
+  const approvedRegistrations = registrations.filter(
+    (registration) => registration.status === "APPROVED" || registration.status === "REGISTERED"
+  );
+  const today = getStartOfToday();
+  const upcomingRegistrations = approvedRegistrations.filter(
+    (registration) => registration.event.startAt >= today
+  );
+  const pastRegistrations = approvedRegistrations.filter(
+    (registration) => registration.event.startAt < today
+  );
+
+  const quickStats = [
+    { label: "Active Tickets", value: approvedRegistrations.length.toString() },
+    { label: "Upcoming Events", value: upcomingRegistrations.length.toString() },
+    { label: "Saved Events", value: "0" },
+  ];
+
+  const upcomingEvents = upcomingRegistrations.slice(0, 3).map((registration) => ({
+    name: registration.event.title,
+    date: formatDate(registration.event.startAt),
+    status: "Registered",
+  }));
+
+  const recentEvents = pastRegistrations.slice(0, 2).map((registration) => ({
+    name: registration.event.title,
+    date: formatDate(registration.event.startAt),
+    status: "Attended",
+  }));
 
   return (
     <main
@@ -65,7 +102,7 @@ export default async function AttendeeAccountPage() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link
-                href="/events"
+                href="/attendee/events"
                 className="attendee-gold-cta rounded-full border border-[#ead8b4] bg-black/40 px-4 py-2 text-xs font-semibold text-[#f6e7c8] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:bg-black/60"
               >
                 Browse Events
@@ -96,7 +133,7 @@ export default async function AttendeeAccountPage() {
           <article className="rounded-2xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_26px_60px_rgba(0,0,0,0.45)]">
             <div className="flex items-center justify-between">
               <h2 className={`${headingFont.className} text-2xl text-[#f6e7c8]`}>Upcoming Events</h2>
-              <Link href="/events" className="text-xs text-[#d8b26f]">
+              <Link href="/attendee/events" className="text-xs text-[#d8b26f]">
                 View All
               </Link>
             </div>
@@ -146,7 +183,7 @@ export default async function AttendeeAccountPage() {
         <section className="mt-8 rounded-2xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_26px_60px_rgba(0,0,0,0.45)] hidden md:block">
           <div className="flex items-center justify-between">
             <h2 className={`${headingFont.className} text-2xl text-[#f6e7c8]`}>Recent Events</h2>
-            <Link href="/events" className="text-xs text-[#d8b26f]">
+            <Link href="/attendee/events" className="text-xs text-[#d8b26f]">
               View History
             </Link>
           </div>

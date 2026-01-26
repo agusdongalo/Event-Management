@@ -4,6 +4,10 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { prisma } from "@/lib/prisma";
+import BookingActions from "./booking-actions";
+
+export const dynamic = "force-dynamic";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -15,64 +19,84 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const statCards = [
-  {
-    title: "Total Bookings",
-    value: "128",
-    tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
-  },
-  {
-    title: "Registered",
-    value: "120",
-    tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
-  },
-  {
-    title: "Cancelled",
-    value: "8",
-    tone: "from-[#d65b6a] via-[#c84d5c] to-[#b74150]",
-  },
-  {
-    title: "Unique Attendees",
-    value: "94",
-    tone: "from-[#2b6f96] via-[#2c7aa6] to-[#2f86b5]",
-  },
-];
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
 
-const bookings = [
-  {
-    name: "John Smith",
-    email: "john.smith@email.com",
-    event: "Tech Conference 2024",
-    eventDate: "May 12, 2024",
-    status: "Registered",
-    bookedOn: "Apr 02, 2024",
-    venue: "Downtown Hall",
-  },
-  {
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    event: "Marketing Workshop",
-    eventDate: "Jun 05, 2024",
-    status: "Registered",
-    bookedOn: "Apr 10, 2024",
-    venue: "Rooftop Lab",
-  },
-  {
-    name: "David Brown",
-    email: "david.brown@email.com",
-    event: "Music Fest",
-    eventDate: "May 25, 2024",
-    status: "Cancelled",
-    bookedOn: "Apr 18, 2024",
-    venue: "Harbor Arena",
-  },
-];
+const formatTier = (tier: string) => {
+  switch (tier) {
+    case "VIP":
+      return "VIP";
+    case "PREMIUM":
+      return "Premium";
+    default:
+      return "Standard";
+  }
+};
+
+const formatStatus = (status: string) => {
+  switch (status) {
+    case "APPROVED":
+    case "REGISTERED":
+      return "Approved";
+    case "PENDING":
+      return "Pending";
+    case "REJECTED":
+      return "Rejected";
+    case "CANCELLED":
+      return "Cancelled";
+    default:
+      return status;
+  }
+};
 
 export default async function OrganizerBookingsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role !== "ORGANIZER") redirect("/");
+
+  const registrations = await prisma.registration.findMany({
+    where: { event: { organizerId: user.id } },
+    orderBy: { createdAt: "desc" },
+    include: {
+      user: { select: { name: true, email: true } },
+      event: { select: { title: true, startAt: true, venue: true } },
+    },
+  });
+
+  const totalBookings = registrations.length;
+  const approvedCount = registrations.filter(
+    (reg) => reg.status === "APPROVED" || reg.status === "REGISTERED"
+  ).length;
+  const pendingCount = registrations.filter((reg) => reg.status === "PENDING").length;
+  const rejectedCount = registrations.filter((reg) => reg.status === "REJECTED").length;
+
+  const statCards = [
+    {
+      title: "Total Requests",
+      value: totalBookings.toString(),
+      tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
+    },
+    {
+      title: "Pending",
+      value: pendingCount.toString(),
+      tone: "from-[#d0a255] via-[#d7b063] to-[#e1c47c]",
+    },
+    {
+      title: "Approved",
+      value: approvedCount.toString(),
+      tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
+    },
+    {
+      title: "Rejected",
+      value: rejectedCount.toString(),
+      tone: "from-[#d65b6a] via-[#c84d5c] to-[#b74150]",
+    },
+  ];
 
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
@@ -197,8 +221,10 @@ export default async function OrganizerBookingsPage() {
 
           <article className="mt-4 rounded-xl bg-white p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Bookings</h2>
-              <span className="text-xs text-[#5a6ca3]">{bookings.length} total</span>
+              <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>
+                Booking Requests
+              </h2>
+              <span className="text-xs text-[#5a6ca3]">{registrations.length} total</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
@@ -207,35 +233,68 @@ export default async function OrganizerBookingsPage() {
                     <th className="pb-2">Attendee</th>
                     <th className="pb-2">Event</th>
                     <th className="pb-2">Event Date</th>
+                    <th className="pb-2">Tier</th>
                     <th className="pb-2">Status</th>
-                    <th className="pb-2">Booked On</th>
-                    <th className="pb-2">Venue</th>
+                    <th className="pb-2">Requested</th>
+                    <th className="pb-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="text-[#243054]">
-                  {bookings.map((booking) => (
-                    <tr key={booking.email} className="border-t border-[#eef1f7]">
-                      <td className="py-3">
-                        <div className="font-medium">{booking.name}</div>
-                        <div className="text-xs text-[#7b86a6]">{booking.email}</div>
+                  {registrations.length === 0 ? (
+                    <tr className="border-t border-[#eef1f7]">
+                      <td className="py-4 text-[#6b7593]" colSpan={7}>
+                        No booking requests yet.
                       </td>
-                      <td className="py-3 font-medium">{booking.event}</td>
-                      <td className="py-3 text-[#6b7593]">{booking.eventDate}</td>
-                      <td className="py-3">
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs ${
-                            booking.status === "Registered"
-                              ? "bg-[#e7f7ef] text-[#2f8a62]"
-                              : "bg-[#fde9eb] text-[#b74150]"
-                          }`}
-                        >
-                          {booking.status}
-                        </span>
-                      </td>
-                      <td className="py-3 text-[#6b7593]">{booking.bookedOn}</td>
-                      <td className="py-3 text-[#6b7593]">{booking.venue}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    registrations.map((booking) => (
+                      <tr key={booking.id} className="border-t border-[#eef1f7]">
+                        <td className="py-3">
+                          <div className="font-medium">{booking.user.name}</div>
+                          <div className="text-xs text-[#7b86a6]">{booking.user.email}</div>
+                        </td>
+                        <td className="py-3 font-medium">{booking.event.title}</td>
+                        <td className="py-3 text-[#6b7593]">{formatDate(booking.event.startAt)}</td>
+                        <td className="py-3">
+                          <span
+                            className={`rounded-full px-2 py-1 text-xs ${
+                              booking.tier === "VIP"
+                                ? "bg-[#ede9ff] text-[#5c53d6]"
+                                : booking.tier === "PREMIUM"
+                                  ? "bg-amber-100 text-amber-700"
+                                  : "bg-slate-100 text-slate-700"
+                            }`}
+                          >
+                            {formatTier(booking.tier)}
+                          </span>
+                        </td>
+                        <td className="py-3">
+                          <span
+                            className={`rounded-full px-2 py-1 text-xs ${
+                              booking.status === "APPROVED" || booking.status === "REGISTERED"
+                                ? "bg-[#e7f7ef] text-[#2f8a62]"
+                                : booking.status === "PENDING"
+                                  ? "bg-[#fff3dd] text-[#b07a2a]"
+                                  : booking.status === "REJECTED"
+                                    ? "bg-[#fde9eb] text-[#b74150]"
+                                    : "bg-[#eef1f7] text-[#7b86a6]"
+                            }`}
+                          >
+                            {formatStatus(booking.status)}
+                          </span>
+                        </td>
+                        <td className="py-3 text-[#6b7593]">
+                          {formatDate(booking.createdAt)}
+                        </td>
+                        <td className="py-3">
+                          <BookingActions
+                            registrationId={booking.id}
+                            status={booking.status}
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

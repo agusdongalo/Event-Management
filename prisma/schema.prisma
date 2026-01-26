@@ -14,8 +14,17 @@ enum Role {
 }
 
 enum RegistrationStatus {
+  PENDING
+  APPROVED
   REGISTERED
+  REJECTED
   CANCELLED
+}
+
+enum TicketTier {
+  VIP
+  PREMIUM
+  STANDARD
 }
 
 enum EventStatus {
@@ -70,7 +79,8 @@ model Registration {
   id          String              @id @default(cuid())
   eventId     String
   userId      String
-  status      RegistrationStatus  @default(REGISTERED)
+  status      RegistrationStatus  @default(PENDING)
+  tier        TicketTier          @default(STANDARD)
   checkedInAt DateTime?
   createdAt   DateTime            @default(now())
 

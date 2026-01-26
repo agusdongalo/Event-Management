@@ -1,8 +1,8 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
-import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
-import EventCardLink from "./event-card-link";
+import { prisma } from "@/lib/prisma";
+import EventCardLink from "@/app/events/event-card-link";
 
 export const dynamic = "force-dynamic";
 
@@ -16,70 +16,6 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const fallbackFeaturedEvents = [
-  {
-    title: "Executive Summit",
-    date: "Mar 08, 2026",
-    venue: "Velvet Hall, NY",
-    status: "Invite Only",
-    image:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    title: "Founder Dinner",
-    date: "Mar 15, 2026",
-    venue: "Maison Rive, LA",
-    status: "Limited Seats",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-  },
-];
-
-const fallbackEventCards = [
-  {
-    title: "Luxury Brand Gala",
-    date: "Mar 21, 2026",
-    venue: "Noir Atelier",
-    tickets: "42 seats left",
-    href: "/events",
-  },
-  {
-    title: "Private Art Soiree",
-    date: "Mar 28, 2026",
-    venue: "Crown & Co Gallery",
-    tickets: "Invite only",
-    href: "/events",
-  },
-  {
-    title: "Corporate Mixer",
-    date: "Apr 04, 2026",
-    venue: "Aria Group HQ",
-    tickets: "58 seats left",
-    href: "/events",
-  },
-  {
-    title: "VIP Nightlife",
-    date: "Apr 10, 2026",
-    venue: "Luxe District",
-    tickets: "Waitlist",
-    href: "/events",
-  },
-  {
-    title: "Leadership Retreat",
-    date: "Apr 18, 2026",
-    venue: "Summit Lodge",
-    tickets: "23 seats left",
-    href: "/events",
-  },
-  {
-    title: "Investor Showcase",
-    date: "Apr 26, 2026",
-    venue: "Maison Rive",
-    tickets: "Limited seats",
-    href: "/events",
-  },
-];
-
 const formatDate = (date: Date) =>
   date.toLocaleDateString("en-US", {
     month: "short",
@@ -87,51 +23,35 @@ const formatDate = (date: Date) =>
     year: "numeric",
   });
 
-export default async function EventsPage() {
+export default async function AttendeeEventsPage() {
   const user = await getCurrentUser();
-  const backHref =
-    user?.role === "ADMIN"
-      ? "/admin"
-      : user?.role === "ORGANIZER"
-        ? "/organizer"
-        : user?.role === "USER"
-          ? "/attendee"
-          : "/";
+  if (!user) redirect("/login");
+  if (user.role === "ADMIN") redirect("/admin");
+  if (user.role === "ORGANIZER") redirect("/organizer");
 
   const dbEvents = await prisma.event.findMany({
     orderBy: { startAt: "asc" },
   });
 
-  const featuredEvents =
-    dbEvents.length > 0
-      ? dbEvents
-          .filter((event) => event.id)
-          .slice(0, 2)
-          .map((event, index) => ({
-            id: event.id,
-            title: event.title,
-            date: formatDate(event.startAt),
-            venue: event.venue,
-            status: event.capacity > 0 ? "Limited Seats" : "Invite Only",
-            image:
-              index === 0
-                ? "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80"
-                : "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-          }))
-      : fallbackFeaturedEvents.map((event) => ({ ...event, id: "" }));
+  const featuredEvents = dbEvents.slice(0, 2).map((event, index) => ({
+    id: event.id,
+    title: event.title,
+    date: formatDate(event.startAt),
+    venue: event.venue,
+    status: event.capacity > 0 ? "Limited Seats" : "Invite Only",
+    image:
+      index === 0
+        ? "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80"
+        : "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+  }));
 
-  const eventCards =
-    dbEvents.length > 0
-      ? dbEvents
-          .filter((event) => event.id)
-          .map((event) => ({
-            title: event.title,
-            date: formatDate(event.startAt),
-            venue: event.venue,
-            tickets: `${event.capacity} seats left`,
-            href: `/events/${encodeURIComponent(event.id)}`,
-          }))
-      : fallbackEventCards;
+  const eventCards = dbEvents.map((event) => ({
+    id: event.id,
+    title: event.title,
+    date: formatDate(event.startAt),
+    venue: event.venue,
+    tickets: `${event.capacity} seats left`,
+  }));
 
   return (
     <main
@@ -144,7 +64,7 @@ export default async function EventsPage() {
       <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6 md:px-10">
         <div className="mb-6">
           <a
-            href={backHref}
+            href="/attendee"
             className="inline-flex items-center gap-2 rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
           >
             <svg
@@ -162,29 +82,22 @@ export default async function EventsPage() {
             Back to dashboard
           </a>
         </div>
+
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">Events</p>
             <h1 className={`${headingFont.className} mt-4 text-4xl text-[#f6e7c8] md:text-6xl`}>
-              Curated Experiences for Elite Hosts
+              Choose Your Next Experience
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-[#cbd2e7] md:text-base">
-              Browse premium events, manage invitations, and monitor guest flow with precision.
+              Browse upcoming events and reserve your seat with a preferred ticket tier.
             </p>
           </div>
-          {user?.role === "ADMIN" ? (
-            <Link
-              href="/events/new"
-              className="rounded-full bg-[#d8b26f] px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#151515] shadow-[0_12px_30px_rgba(216,178,111,0.35)] transition hover:brightness-110"
-            >
-              Create Event
-            </Link>
-          ) : null}
         </header>
 
         <section className="mt-8 grid gap-3 rounded-2xl border border-[#2a3248] bg-[#12192a] p-4 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div className="flex items-center gap-2 rounded-xl border border-[#222c48] bg-[#0f1527] px-3 py-2">
-            <span className="text-[#93a1c6]">???</span>
+            <span className="text-[#93a1c6]">🔍</span>
             <input
               placeholder="Search events"
               className="w-full bg-transparent text-sm text-[#f3eee6] outline-none placeholder:text-[#7f8cad]"
@@ -206,8 +119,8 @@ export default async function EventsPage() {
         <section className="mt-10 grid gap-6 lg:grid-cols-2">
           {featuredEvents.map((event) => (
             <EventCardLink
-              key={event.title}
-              href={event.id ? `/events/${event.id}` : "/events"}
+              key={event.id}
+              href={`/events/${event.id}`}
               ariaLabel={`View details for ${event.title}`}
               className="relative z-10 overflow-hidden rounded-3xl border border-[#2a3248] bg-[#101827]"
             >
@@ -222,7 +135,7 @@ export default async function EventsPage() {
                   {event.title}
                 </h2>
                 <p className="text-sm text-[#cbd2e7]">
-                  {event.date} ?? {event.venue}
+                  {event.date} · {event.venue}
                 </p>
                 <div className="pt-4">
                   <span className="inline-flex items-center rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition group-hover:bg-black/55">
@@ -244,8 +157,8 @@ export default async function EventsPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {eventCards.map((event) => (
               <EventCardLink
-                key={event.title}
-                href={event.href}
+                key={event.id}
+                href={`/events/${event.id}`}
                 ariaLabel={`Reserve for ${event.title}`}
                 className="relative z-10 rounded-2xl border border-[#2a3248] bg-[#12192a] p-5 shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
               >
@@ -262,29 +175,6 @@ export default async function EventsPage() {
                 </div>
               </EventCardLink>
             ))}
-          </div>
-        </section>
-
-        <section className="mt-12 rounded-3xl border border-[#2a3248] bg-[#12192a] p-6 text-center shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
-          <h2 className={`${headingFont.className} text-3xl text-[#f6e7c8] md:text-4xl`}>
-            Host an unforgettable experience
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-[#cbd2e7] md:text-base">
-            Create a premium event, control guest access, and track attendance in real time.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/events/new"
-              className="rounded-full bg-[#d8b26f] px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#151515] transition hover:brightness-110"
-            >
-              Start Event
-            </Link>
-            <Link
-              href="/apply-access"
-              className="rounded-full border border-[#ead8b4] bg-black/35 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
-            >
-              Apply for Access
-            </Link>
           </div>
         </section>
       </div>

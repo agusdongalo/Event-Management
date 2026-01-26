@@ -4,6 +4,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { prisma } from "@/lib/prisma";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -15,61 +16,102 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const statCards = [
-  {
-    title: "Total Attendees",
-    value: "94",
-    tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
-  },
-  {
-    title: "Total Bookings",
-    value: "128",
-    tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
-  },
-  {
-    title: "Upcoming Bookings",
-    value: "22",
-    tone: "from-[#2b6f96] via-[#2c7aa6] to-[#2f86b5]",
-  },
-  {
-    title: "Avg. Bookings",
-    value: "1.4",
-    tone: "from-[#b2772e] via-[#a56a26] to-[#935f20]",
-  },
-];
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
 
-const attendees = [
-  {
-    name: "John Smith",
-    email: "john.smith@email.com",
-    total: 3,
-    upcoming: 1,
-    lastBooked: "Apr 02, 2024",
-    status: "Active",
-  },
-  {
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    total: 2,
-    upcoming: 2,
-    lastBooked: "Apr 10, 2024",
-    status: "Active",
-  },
-  {
-    name: "David Brown",
-    email: "david.brown@email.com",
-    total: 1,
-    upcoming: 0,
-    lastBooked: "Mar 28, 2024",
-    status: "Dormant",
-  },
-];
+const getStartOfToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
 
 export default async function OrganizerAttendeesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
   if (user.role !== "ORGANIZER") redirect("/");
+
+  const registrations = await prisma.registration.findMany({
+    where: {
+      event: { organizerId: user.id },
+      status: { in: ["APPROVED", "REGISTERED"] },
+    },
+    orderBy: { createdAt: "desc" },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      event: { select: { startAt: true } },
+    },
+  });
+
+  const today = getStartOfToday();
+  const attendeeMap = new Map<
+    string,
+    {
+      name: string;
+      email: string;
+      total: number;
+      upcoming: number;
+      lastBookedAt?: Date;
+    }
+  >();
+
+  registrations.forEach((registration) => {
+    const attendeeId = registration.user.id;
+    const existing = attendeeMap.get(attendeeId) ?? {
+      name: registration.user.name,
+      email: registration.user.email,
+      total: 0,
+      upcoming: 0,
+      lastBookedAt: undefined,
+    };
+    existing.total += 1;
+    if (registration.event.startAt >= today) {
+      existing.upcoming += 1;
+    }
+    if (!existing.lastBookedAt || registration.createdAt > existing.lastBookedAt) {
+      existing.lastBookedAt = registration.createdAt;
+    }
+    attendeeMap.set(attendeeId, existing);
+  });
+
+  const attendees = Array.from(attendeeMap.values()).map((attendee) => ({
+    ...attendee,
+    lastBooked: attendee.lastBookedAt ? formatDate(attendee.lastBookedAt) : "—",
+    status: attendee.upcoming > 0 ? "Active" : "Dormant",
+  }));
+
+  const totalAttendees = attendeeMap.size;
+  const totalBookings = registrations.length;
+  const upcomingBookings = registrations.filter((registration) => registration.event.startAt >= today)
+    .length;
+  const avgBookings = totalAttendees === 0 ? 0 : totalBookings / totalAttendees;
+
+  const statCards = [
+    {
+      title: "Total Attendees",
+      value: totalAttendees.toString(),
+      tone: "from-[#6a5af9] via-[#7b62ff] to-[#8a74ff]",
+    },
+    {
+      title: "Total Bookings",
+      value: totalBookings.toString(),
+      tone: "from-[#2f7a6b] via-[#2f8c7a] to-[#36a18c]",
+    },
+    {
+      title: "Upcoming Bookings",
+      value: upcomingBookings.toString(),
+      tone: "from-[#2b6f96] via-[#2c7aa6] to-[#2f86b5]",
+    },
+    {
+      title: "Avg. Bookings",
+      value: avgBookings.toFixed(1),
+      tone: "from-[#b2772e] via-[#a56a26] to-[#935f20]",
+    },
+  ];
 
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
@@ -209,28 +251,36 @@ export default async function OrganizerAttendeesPage() {
                   </tr>
                 </thead>
                 <tbody className="text-[#243054]">
-                  {attendees.map((attendee) => (
-                    <tr key={attendee.email} className="border-t border-[#eef1f7]">
-                      <td className="py-3">
-                        <div className="font-medium">{attendee.name}</div>
-                        <div className="text-xs text-[#7b86a6]">{attendee.email}</div>
-                      </td>
-                      <td className="py-3">{attendee.total}</td>
-                      <td className="py-3">{attendee.upcoming}</td>
-                      <td className="py-3 text-[#6b7593]">{attendee.lastBooked}</td>
-                      <td className="py-3">
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs ${
-                            attendee.status === "Active"
-                              ? "bg-[#e7f7ef] text-[#2f8a62]"
-                              : "bg-[#eef1f7] text-[#7b86a6]"
-                          }`}
-                        >
-                          {attendee.status}
-                        </span>
+                  {attendees.length === 0 ? (
+                    <tr className="border-t border-[#eef1f7]">
+                      <td className="py-3" colSpan={5}>
+                        No attendees yet.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    attendees.map((attendee) => (
+                      <tr key={attendee.email} className="border-t border-[#eef1f7]">
+                        <td className="py-3">
+                          <div className="font-medium">{attendee.name}</div>
+                          <div className="text-xs text-[#7b86a6]">{attendee.email}</div>
+                        </td>
+                        <td className="py-3">{attendee.total}</td>
+                        <td className="py-3">{attendee.upcoming}</td>
+                        <td className="py-3 text-[#6b7593]">{attendee.lastBooked}</td>
+                        <td className="py-3">
+                          <span
+                            className={`rounded-full px-2 py-1 text-xs ${
+                              attendee.status === "Active"
+                                ? "bg-[#e7f7ef] text-[#2f8a62]"
+                                : "bg-[#eef1f7] text-[#7b86a6]"
+                            }`}
+                          >
+                            {attendee.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
