@@ -113,6 +113,7 @@ export default async function AdminEventsPage() {
               { label: "Events", href: "/admin/events", active: true },
               { label: "Registrations", href: "/admin/registrations", active: false },
               { label: "Attendees", href: "/admin/attendees", active: false },
+              { label: "Users", href: "/admin/users", active: false },
               { label: "Analytics", href: "/admin/analytics", active: false },
               { label: "Messages", href: "/admin/messages", active: false },
               { label: "Settings", href: "/admin/settings", active: false },
@@ -126,7 +127,7 @@ export default async function AdminEventsPage() {
                     : "text-white/70 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                {item.label}
+                                {item.label}
               </a>
             ))}
           </nav>

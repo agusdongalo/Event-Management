@@ -3,6 +3,10 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { prisma } from "@/lib/prisma";
+import UsersToolbar from "./users-toolbar";
+
+export const dynamic = "force-dynamic";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -14,18 +18,22 @@ const bodyFont = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
-const registrations = [
-  { name: "Amelia Grant", event: "Executive Summit", status: "Verified", date: "Mar 02, 2026" },
-  { name: "Noah Sinclair", event: "Founder Dinner", status: "Pending", date: "Mar 03, 2026" },
-  { name: "Lena Hart", event: "Luxury Brand Gala", status: "Verified", date: "Mar 04, 2026" },
-  { name: "Marcus Cole", event: "Luxury Brand Gala", status: "Waitlist", date: "Mar 05, 2026" },
-  { name: "Sofia Lin", event: "Private Art Soiree", status: "Pending", date: "Mar 06, 2026" },
-];
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
 
-export default async function AdminRegistrationsPage() {
+export default async function AdminUsersPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "ADMIN") redirect("/");
+
+  const users = await prisma.user.findMany({
+    orderBy: { createdAt: "desc" },
+    select: { id: true, name: true, email: true, role: true, createdAt: true },
+  });
 
   return (
     <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
@@ -45,9 +53,9 @@ export default async function AdminRegistrationsPage() {
             {[
               { label: "Dashboard", href: "/admin", active: false },
               { label: "Events", href: "/admin/events", active: false },
-              { label: "Registrations", href: "/admin/registrations", active: true },
+              { label: "Registrations", href: "/admin/registrations", active: false },
               { label: "Attendees", href: "/admin/attendees", active: false },
-              { label: "Users", href: "/admin/users", active: false },
+              { label: "Users", href: "/admin/users", active: true },
               { label: "Analytics", href: "/admin/analytics", active: false },
               { label: "Messages", href: "/admin/messages", active: false },
               { label: "Settings", href: "/admin/settings", active: false },
@@ -75,12 +83,12 @@ export default async function AdminRegistrationsPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
+          <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#6b7593]">Admin</p>
-              <h1 className={`${headingFont.className} text-3xl text-[#1b2441]`}>Registrations</h1>
+              <h1 className={`${headingFont.className} text-3xl text-[#1b2441]`}>Users</h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-3">
               <div className="organizer-top-shadow organizer-top-shadow-circle">
                 <ThemeToggleButton />
               </div>
@@ -104,69 +112,59 @@ export default async function AdminRegistrationsPage() {
                   <path d="M5 17h14" />
                 </svg>
               </button>
-              <div className="organizer-top-shadow flex items-center gap-3 rounded-full bg-white px-3 py-1.5 shadow-sm">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f4ff] text-sm font-semibold text-[#4a5b87]">
-                  {user.name.slice(0, 1).toUpperCase()}
-                </div>
-                <div className="pr-1 text-xs">
-                  <p className="font-semibold text-[#1b2441]">{user.name}</p>
-                  <p className="text-[#8b93ad]">{user.email}</p>
+              <div className="flex flex-col items-end gap-2">
+                <div className="organizer-top-shadow flex items-center gap-3 rounded-full bg-white px-3 py-1.5 shadow-sm">
+                  <div className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f4ff] text-sm font-semibold text-[#4a5b87]">
+                    {user.name.slice(0, 1).toUpperCase()}
+                  </div>
+                  <div className="pr-1 text-xs">
+                    <p className="font-semibold text-[#1b2441]">{user.name}</p>
+                    <p className="text-[#8b93ad]">{user.email}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </header>
 
-          <div className="relative z-0 mb-4 grid gap-3 md:grid-cols-[1.2fr_0.6fr_0.4fr]">
-            <div className="organizer-top-shadow flex h-11 items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
-              <span className="text-[#8b93ad]">⌕</span>
-              <input
-                placeholder="Search registrations"
-                className="h-full w-full bg-transparent text-sm text-[#1a1f35] outline-none placeholder:text-[#9aa2b6]"
-              />
-            </div>
-            <select className="organizer-top-shadow h-11 rounded-xl border border-transparent bg-white px-3 text-sm text-[#4a5b87] outline-none shadow-sm">
-              <option>All statuses</option>
-              <option>Verified</option>
-              <option>Pending</option>
-              <option>Waitlist</option>
-            </select>
-            <button className="organizer-top-shadow h-11 rounded-xl bg-[#3b5dd0] text-sm font-semibold text-white shadow-md">
-              Export
-            </button>
-          </div>
+          <UsersToolbar />
 
           <div className="organizer-top-shadow relative z-10 rounded-2xl bg-white p-4 shadow-sm">
-            <div className="grid gap-2 text-sm text-[#7b86a6] sm:grid-cols-[1.4fr_1fr_0.7fr_0.7fr]">
-              <span>Guest</span>
-              <span>Event</span>
-              <span>Status</span>
-              <span>Date</span>
+            <div className="grid gap-2 text-sm font-semibold text-[#4a5b87] sm:grid-cols-[1.4fr_1.6fr_0.7fr_0.8fr]">
+              <span>Name</span>
+              <span>Email</span>
+              <span>Role</span>
+              <span>Created</span>
             </div>
             <div className="mt-3 space-y-2">
-              {registrations.map((item) => (
-                <div
-                  key={`${item.name}-${item.event}`}
-                  className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[1.4fr_1fr_0.7fr_0.7fr]"
-                >
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-xs text-[#7b86a6]">Verified Host</p>
-                  </div>
-                  <span className="text-[#6b7593]">{item.event}</span>
-                  <span
-                    className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
-                      item.status === "Verified"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : item.status === "Pending"
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-rose-100 text-rose-700"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                  <span className="text-[#6b7593]">{item.date}</span>
+              {users.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-[#e0e5f2] px-4 py-6 text-center text-sm text-[#6b7593]">
+                  No users found.
                 </div>
-              ))}
+              ) : (
+                users.map((account) => (
+                  <div
+                    key={account.id}
+                    className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[1.4fr_1.6fr_0.7fr_0.8fr]"
+                  >
+                    <div>
+                      <p className="font-medium">{account.name}</p>
+                    </div>
+                    <span className="text-[#6b7593]">{account.email}</span>
+                    <span
+                      className={`w-fit rounded-full px-2 py-1 text-xs organizer-badge ${
+                        account.role === "ADMIN"
+                          ? "bg-rose-100 text-rose-700"
+                          : account.role === "ORGANIZER"
+                            ? "bg-violet-100 text-violet-700"
+                            : "bg-emerald-100 text-emerald-700"
+                      }`}
+                    >
+                      {account.role}
+                    </span>
+                    <span className="text-[#6b7593]">{formatDate(account.createdAt)}</span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>
