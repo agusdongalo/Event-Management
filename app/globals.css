@@ -5,6 +5,16 @@
   --foreground: #171717;
 }
 
+body[data-organizer-theme="light"] {
+  --background: #f4f5fb;
+  --foreground: #0d1021;
+}
+
+body.organizer-dark {
+  --background: #0f1624;
+  --foreground: #f5f7ff;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -19,23 +29,30 @@
   }
 }
 
+html,
+body,
+#__next {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-html,
-body {
-  width: 100%;
-  overflow-x: clip;
-  overflow-y: scroll;
-  scrollbar-gutter: stable both-edges;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: auto;
+  scrollbar-color: #c9d2e6 var(--background);
 }
 
 main {
   width: 100%;
-  overflow-x: clip;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--background);
 }
 
 [data-aos] {
@@ -45,6 +62,47 @@ main {
 .organizer-theme {
   background: #f4f5fb;
   transition: filter 200ms ease;
+}
+
+.organizer-theme {
+  scrollbar-color: #c2cbe0 #f4f5fb;
+}
+
+body.organizer-dark {
+  scrollbar-color: #3b475e #0f1624;
+}
+
+/* WebKit scrollbar styling */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c9d2e6;
+  border-radius: 999px;
+  border: 2px solid var(--background);
+}
+
+body.organizer-dark *::-webkit-scrollbar-track {
+  background: #0f1624;
+}
+
+body.organizer-dark *::-webkit-scrollbar-thumb {
+  background-color: #3b475e;
+  border-color: #0f1624;
+}
+
+.organizer-theme *::-webkit-scrollbar-track {
+  background: #f4f5fb;
+}
+
+.organizer-theme *::-webkit-scrollbar-thumb {
+  background-color: #c2cbe0;
+  border-color: #f4f5fb;
 }
 
 body.organizer-dark .organizer-content {
@@ -125,6 +183,41 @@ body.organizer-dark .organizer-content .organizer-top-shadow {
 .organizer-list-shadow {
   box-shadow: 0 6px 14px rgba(20, 28, 40, 0.14);
 }
+
+.search-icon-btn {
+  left: 12px;
+  transition:
+    left 500ms ease-in-out,
+    color 500ms ease-in-out,
+    background-color 500ms ease-in-out,
+    box-shadow 500ms ease-in-out;
+}
+
+.search-input:focus + .search-icon-btn {
+  left: calc(100% - 12px - 36px);
+}
+
+.search-input:focus + .search-icon-btn span {
+  background-color: #1c1f2a;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(17, 23, 35, 0.35);
+}
+
+.search-input:placeholder-shown ~ .search-icon-btn {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+.search-input:not(:placeholder-shown) + .search-icon-btn {
+  left: calc(100% - 12px - 36px);
+}
+
+.search-input:not(:placeholder-shown) + .search-icon-btn span {
+  background-color: #1c1f2a;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(17, 23, 35, 0.35);
+}
+
 
 .organizer-top-shadow-circle {
   display: inline-flex;

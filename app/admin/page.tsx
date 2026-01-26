@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 import { ThemeToggleButton } from "@/components/theme-toggle";
 import { SegmentedToggle } from "@/components/segmented-toggle";
+import { AdminSearch } from "@/components/admin-search";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -58,8 +59,8 @@ export default async function AdminDashboardPage() {
   if (user.role !== "ADMIN") redirect("/");
 
   return (
-    <main className={`${bodyFont.className} min-h-screen organizer-theme text-[#0d1021]`}>
-      <div className="grid min-h-screen md:grid-cols-[260px_1fr]">
+    <main className={`${bodyFont.className} min-h-screen w-full organizer-theme text-[#0d1021]`}>
+      <div className="grid min-h-screen w-full md:grid-cols-[260px_1fr]">
         <aside className="bg-[linear-gradient(180deg,#2b3f66_0%,#1b2a4a_45%,#13223b_100%)] px-5 py-6 text-white">
           <div className="flex items-center gap-3 pb-5">
             <div className="grid h-11 w-11 place-items-center rounded-full bg-white/10 text-xs font-semibold uppercase tracking-[0.28em]">
@@ -104,14 +105,8 @@ export default async function AdminDashboardPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="organizer-top-shadow flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
-              <span className="text-[#8b93ad]">?</span>
-              <input
-                placeholder="Search task"
-                className="h-full w-full bg-transparent text-sm text-[#1a1f35] outline-none placeholder:text-[#9aa2b6]"
-              />
-            </div>
+          <header className="relative z-20 mb-6 flex flex-wrap items-center justify-between gap-3">
+            <AdminSearch />
 
             <div className="flex items-center gap-3">
               <div className="organizer-top-shadow organizer-top-shadow-circle">
