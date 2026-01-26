@@ -66,7 +66,7 @@ export default async function AdminSettingsPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#6b7593]">Admin</p>
               <h1 className={`${headingFont.className} text-3xl text-[#1b2441]`}>Settings</h1>
@@ -107,25 +107,25 @@ export default async function AdminSettingsPage() {
             </div>
           </header>
 
-          <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="relative z-10 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Profile</h2>
               <div className="mt-4 grid gap-3 md:grid-cols-2">
                 <input
-                  className="rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
+                  className="organizer-list-shadow rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
                   defaultValue={user.name}
                 />
                 <input
-                  className="rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
+                  className="organizer-list-shadow rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
                   defaultValue={user.email}
                 />
                 <input
-                  className="rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
+                  className="organizer-list-shadow rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
                   placeholder="Role"
                   defaultValue="Administrator"
                 />
                 <input
-                  className="rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
+                  className="organizer-list-shadow rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-2 text-sm text-[#1b2441] outline-none"
                   placeholder="Contact number"
                 />
               </div>
@@ -142,7 +142,10 @@ export default async function AdminSettingsPage() {
                   "SMS alerts for VIP check-ins",
                   "Weekly performance summary",
                 ].map((item) => (
-                  <label key={item} className="flex items-center justify-between rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-2">
+                  <label
+                    key={item}
+                    className="organizer-list-shadow flex items-center justify-between rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-2"
+                  >
                     <span>{item}</span>
                     <input type="checkbox" defaultChecked className="h-4 w-4 accent-[#3b5dd0]" />
                   </label>
@@ -151,15 +154,15 @@ export default async function AdminSettingsPage() {
             </article>
           </div>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="relative z-10 mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Security</h2>
               <div className="mt-4 space-y-3 text-sm text-[#2a3659]">
-                <div className="rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
+                <div className="organizer-list-shadow rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
                   <p className="font-semibold text-[#1b2441]">Two-factor authentication</p>
                   <p className="text-xs text-[#7b86a6]">Require 2FA for all admin logins.</p>
                 </div>
-                <div className="rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
+                <div className="organizer-list-shadow rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
                   <p className="font-semibold text-[#1b2441]">Session timeout</p>
                   <p className="text-xs text-[#7b86a6]">Automatically log out after 30 minutes.</p>
                 </div>
@@ -169,11 +172,11 @@ export default async function AdminSettingsPage() {
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Access</h2>
               <div className="mt-4 space-y-3 text-sm text-[#2a3659]">
-                <div className="rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
+                <div className="organizer-list-shadow rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
                   <p className="font-semibold text-[#1b2441]">Invite new admins</p>
                   <p className="text-xs text-[#7b86a6]">Grant access to trusted team members.</p>
                 </div>
-                <div className="rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
+                <div className="organizer-list-shadow rounded-lg border border-[#eef1f7] bg-[#f9fafe] px-3 py-3">
                   <p className="font-semibold text-[#1b2441]">Audit log</p>
                   <p className="text-xs text-[#7b86a6]">Track sensitive changes and approvals.</p>
                 </div>

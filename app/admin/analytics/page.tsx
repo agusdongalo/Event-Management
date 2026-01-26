@@ -85,7 +85,7 @@ export default async function AdminAnalyticsPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#6b7593]">Admin</p>
               <h1 className={`${headingFont.className} text-3xl text-[#1b2441]`}>Analytics</h1>
@@ -126,7 +126,7 @@ export default async function AdminAnalyticsPage() {
             </div>
           </header>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="relative z-0 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {kpis.map((kpi) => (
               <article key={kpi.label} className="rounded-xl bg-white p-4 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#7b86a6]">{kpi.label}</p>
@@ -136,7 +136,7 @@ export default async function AdminAnalyticsPage() {
             ))}
           </div>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="relative z-10 mt-4 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Revenue Trend</h2>

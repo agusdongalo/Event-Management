@@ -29,6 +29,8 @@ html,
 body {
   width: 100%;
   overflow-x: clip;
+  overflow-y: scroll;
+  scrollbar-gutter: stable both-edges;
 }
 
 main {
@@ -51,9 +53,15 @@ body.organizer-dark .organizer-content {
 }
 
 
-body.organizer-dark .organizer-content [class*="bg-"]:not([class*="bg-gradient"]):not(.organizer-badge):not(.organizer-add-task) {
+body.organizer-dark .organizer-content [class*="bg-"]:not([class*="bg-gradient"]):not(.organizer-badge):not(.organizer-add-task):not(.organizer-chat-bubble) {
   background-color: #1b2431 !important;
   background-image: none !important;
+}
+
+body.organizer-dark .organizer-content .organizer-chat-bubble {
+  background-color: #2a3547 !important;
+  border: 1px solid #3a475e !important;
+  color: #e6edf7 !important;
 }
 
 body.organizer-dark .organizer-content [class*="border-"] {
@@ -112,6 +120,10 @@ body.organizer-dark .organizer-content .organizer-top-shadow {
 
 .organizer-top-shadow {
   box-shadow: 0 10px 26px rgba(20, 28, 40, 0.25);
+}
+
+.organizer-list-shadow {
+  box-shadow: 0 6px 14px rgba(20, 28, 40, 0.14);
 }
 
 .organizer-top-shadow-circle {

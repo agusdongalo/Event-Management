@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
             <div className="organizer-top-shadow flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
               <span className="text-[#8b93ad]">?</span>
               <input
@@ -150,7 +150,7 @@ export default async function AdminDashboardPage() {
             </div>
           </header>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="relative z-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map((stat) => (
               <article
                 key={stat.label}

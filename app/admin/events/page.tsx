@@ -138,7 +138,7 @@ export default async function AdminEventsPage() {
             </div>
           </header>
 
-          <div className="mb-4 grid gap-3 md:grid-cols-[1.2fr_0.6fr_0.4fr]">
+          <div className="relative z-0 mb-4 grid gap-3 md:grid-cols-[1.2fr_0.6fr_0.4fr]">
             <div className="organizer-top-shadow flex h-11 items-center gap-2 rounded-xl border border-transparent bg-white px-3 shadow-sm">
               <span className="text-[#8b93ad]">⌕</span>
               <input
@@ -146,19 +146,19 @@ export default async function AdminEventsPage() {
                 className="h-full w-full bg-transparent text-sm text-[#1a1f35] outline-none placeholder:text-[#9aa2b6]"
               />
             </div>
-            <select className="h-11 rounded-xl border border-[#eef1f7] bg-white px-3 text-sm text-[#4a5b87] outline-none">
+            <select className="organizer-top-shadow h-11 rounded-xl border border-transparent bg-white px-3 text-sm text-[#4a5b87] outline-none shadow-sm">
               <option>All statuses</option>
               <option>Live</option>
               <option>Upcoming</option>
               <option>Draft</option>
             </select>
-            <button className="h-11 rounded-xl bg-[#3b5dd0] text-sm font-semibold text-white shadow-sm">
+            <button className="organizer-top-shadow h-11 rounded-xl bg-[#3b5dd0] text-sm font-semibold text-white shadow-md">
               + Add Event
             </button>
           </div>
 
-          <div className="rounded-2xl bg-white p-4 shadow-sm">
-            <div className="grid gap-2 text-sm text-[#7b86a6] sm:grid-cols-[2fr_1fr_1fr_1fr]">
+          <div className="organizer-top-shadow relative z-10 rounded-2xl bg-white p-4 shadow-sm">
+            <div className="grid gap-2 text-sm font-semibold text-[#4a5b87] sm:grid-cols-[2fr_1fr_1fr_1fr]">
               <span>Event</span>
               <span>Date</span>
               <span>Status</span>
@@ -168,7 +168,7 @@ export default async function AdminEventsPage() {
               {events.map((event) => (
                 <div
                   key={event.title}
-                  className="grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[2fr_1fr_1fr_1fr]"
+                  className="organizer-list-shadow grid items-center gap-2 rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm text-[#243054] sm:grid-cols-[2fr_1fr_1fr_1fr]"
                 >
                   <div>
                     <p className="font-medium">{event.title}</p>

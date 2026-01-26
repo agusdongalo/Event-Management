@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 
@@ -74,7 +73,6 @@ const audience = [
 
 export default async function Home() {
   const user = await getCurrentUser();
-  if (user?.role === "ADMIN") redirect("/admin");
 
   const primaryHref = user ? "/events/new" : "#contact";
   const secondaryHref = user ? "/events" : "/login";

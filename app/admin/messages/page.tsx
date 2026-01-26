@@ -99,7 +99,7 @@ export default async function AdminMessagesPage() {
         </aside>
 
         <section className="organizer-content p-5 md:p-7">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <header className="relative z-0 mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#6b7593]">Admin</p>
               <h1 className={`${headingFont.className} text-3xl text-[#1b2441]`}>Messages</h1>
@@ -140,7 +140,7 @@ export default async function AdminMessagesPage() {
             </div>
           </header>
 
-          <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative z-10 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <article className="rounded-xl bg-white p-4 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className={`${headingFont.className} text-2xl text-[#1b2441]`}>Inbox</h2>
@@ -150,7 +150,7 @@ export default async function AdminMessagesPage() {
                 {conversations.map((chat) => (
                   <div
                     key={chat.name}
-                    className="flex items-center justify-between rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm"
+                    className="organizer-list-shadow flex items-center justify-between rounded-xl border border-[#eef1f7] bg-[#f9fafe] px-3 py-3 text-sm"
                   >
                     <div>
                       <p className="font-medium text-[#243054]">{chat.name}</p>
@@ -188,7 +188,7 @@ export default async function AdminMessagesPage() {
                         className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm ${
                           isAdmin
                             ? "bg-[#3b5dd0] text-white organizer-badge"
-                            : "bg-[#f2f4ff] text-[#243054]"
+                            : "organizer-chat-bubble bg-[#f2f4ff] text-[#243054]"
                         }`}
                       >
                         <p>{message.text}</p>
