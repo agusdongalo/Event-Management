@@ -76,7 +76,7 @@ export default async function Home() {
   const user = await getCurrentUser();
   if (user?.role === "ADMIN") redirect("/admin");
 
-  const primaryHref = user ? "/events/new" : "/signup";
+  const primaryHref = user ? "/events/new" : "#contact";
   const secondaryHref = user ? "/events" : "/login";
 
   const navActions = (

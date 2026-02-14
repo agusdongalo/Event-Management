@@ -80,42 +80,63 @@ export function AuthForm({ mode }: AuthFormProps) {
       className={`${bodyFont.className} min-h-screen px-4 py-8 text-white md:px-10`}
       style={{
         background:
-          "radial-gradient(circle at 15% 10%, #2a874f 0%, #15492f 35%, #0a2116 100%)",
+          "radial-gradient(circle at 20% 20%, rgba(216,178,111,0.22), transparent 40%), radial-gradient(circle at 80% 30%, rgba(92,88,126,0.24), transparent 45%), #090b11",
       }}
     >
-      <div className="mx-auto grid min-h-[82vh] w-full max-w-6xl overflow-hidden rounded-3xl border border-white/15 bg-black/40 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-md md:grid-cols-[1fr_1.15fr]">
+      <div className="mx-auto grid min-h-[82vh] w-full max-w-6xl overflow-hidden rounded-[32px] border border-white/10 bg-black/55 shadow-[0_30px_90px_rgba(0,0,0,0.55)] backdrop-blur-md md:grid-cols-[1fr_1.05fr]">
         <section className="relative flex flex-col justify-between overflow-hidden p-8 md:p-10">
           <div
-            className="pointer-events-none absolute inset-0 opacity-40"
+            className="pointer-events-none absolute inset-0 opacity-70"
             style={{
               background:
-                "radial-gradient(circle at 10% 20%, #4ddb7f 0%, transparent 40%), radial-gradient(circle at 90% 80%, #1d6e45 0%, transparent 45%)",
+                "radial-gradient(circle at 15% 20%, rgba(216,178,111,0.28), transparent 42%), radial-gradient(circle at 85% 70%, rgba(92,88,126,0.26), transparent 45%)",
             }}
           />
-          <div className="relative mt-auto max-w-sm">
-            <h1 className={`${headingFont.className} text-4xl font-semibold md:text-5xl`}>
-              Let&apos;s Get Started
-            </h1>
-            <p className="mt-4 text-sm leading-7 text-emerald-100/85">
-              Create and manage events, registrations, and check-ins with a clean workflow for
-              both attendees and organizers.
-            </p>
+          <div className="relative max-w-md space-y-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">
+                SuperDon Elite
+              </p>
+              <h1 className={`${headingFont.className} mt-4 text-4xl font-semibold md:text-5xl`}>
+                Join The Elite Circle
+              </h1>
+              <p className="mt-4 text-sm leading-7 text-[#e8dfcf]/80">
+                Access the industry&apos;s premium platform for effortless event orchestration and
+                seamless attendee management.
+              </p>
+            </div>
+            <ul className="space-y-3 text-sm text-[#d6d8e4]">
+              {[
+                "Curate & manage upscale events",
+                "Track guest lists in real-time",
+                "Streamline check-ins for VIPs",
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-3">
+                  <span className="grid h-5 w-5 place-items-center rounded-full border border-[#d8b26f] text-[10px] text-[#d8b26f]">
+                    ✓
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="relative mt-10 text-xs uppercase tracking-[0.22em] text-emerald-200/75">
-            Event Management Portal
+          <p className="relative mt-10 text-xs uppercase tracking-[0.3em] text-[#d8caa7]/70">
+            Event Management Platform
           </p>
         </section>
 
-        <section className="border-l border-white/15 bg-black/30 px-7 py-8 md:px-12 md:py-10">
+        <section className="flex flex-col border-l border-white/10 bg-black/40 px-7 py-8 md:px-12 md:py-10">
           <div className="grid gap-8 md:grid-cols-[1fr_auto]">
             <form onSubmit={onSubmit} className="space-y-5">
-              <h2 className={`${headingFont.className} text-4xl font-semibold`}>{title}</h2>
+              <h2 className={`${headingFont.className} text-4xl font-semibold`}>
+                {mode === "login" ? "Sign In" : "Sign Up"}
+              </h2>
               {mode === "signup" ? (
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   placeholder="Your name"
-                  className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-zinc-300"
+                  className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                   required
                 />
               ) : null}
@@ -124,7 +145,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Your email"
-                className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-zinc-300"
+                className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                 required
               />
               <input
@@ -132,7 +153,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder={mode === "login" ? "Your password" : "Create password"}
-                className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-zinc-300"
+                className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                 minLength={8}
                 required
               />
@@ -142,7 +163,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
                   placeholder="Repeat password"
-                  className="w-full border-b border-white/45 bg-transparent py-2 text-sm outline-none placeholder:text-zinc-300"
+                  className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                   minLength={8}
                   required
                 />
@@ -150,43 +171,72 @@ export function AuthForm({ mode }: AuthFormProps) {
               {error ? <p className="text-sm text-red-300">{error}</p> : null}
               <button
                 type="submit"
-                className="w-full rounded bg-emerald-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-400 disabled:opacity-70"
+                className="w-full rounded-full bg-[linear-gradient(90deg,#ba9054_0%,#e2c48e_55%,#c89f63_100%)] px-4 py-3 text-sm font-semibold text-[#151515] shadow-[0_12px_30px_rgba(216,178,111,0.35)] transition hover:brightness-110 disabled:opacity-70"
                 disabled={loading}
               >
-                {loading ? "Please wait..." : title}
+                {loading ? "Please wait..." : mode === "login" ? "Sign In" : "Sign Up"}
               </button>
-              <p className="text-sm text-zinc-200">
-                {mode === "login" ? "No account yet?" : "Already a member?"}{" "}
-                <Link href={mode === "login" ? "/signup" : "/login"} className="font-semibold text-emerald-300">
-                  {mode === "login" ? "Sign up now" : "Sign in"}
+              <p className="text-xs text-[#cbd2e7]">
+                {mode === "login" ? "Not a member?" : "Already a member?"}{" "}
+                <Link
+                  href={mode === "login" ? "/apply-access" : "/login"}
+                  className="font-semibold text-[#e2c48e]"
+                >
+                  {mode === "login" ? "Apply for Access" : "Sign in"}
                 </Link>
+              </p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60">
+                Verified hosts &amp; venues only
               </p>
             </form>
 
-            <div className="flex flex-col items-center justify-center gap-5 border-l border-white/20 pl-6 text-center">
-              <p className="text-xs tracking-[0.2em] text-zinc-300">OR</p>
+            <div className="flex flex-col items-center justify-center gap-5 border-l border-white/10 pl-6 text-center">
+              <p className="text-[10px] tracking-[0.3em] text-[#b9c1d4]">OR</p>
               <button
                 type="button"
-                className="h-10 w-10 rounded-full border border-white/45 bg-white/10 text-base font-bold"
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/5 text-white/80"
+                aria-label="Continue with Gmail"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
+                  <path
+                    fill="#EA4335"
+                    d="M12 12.7L3.2 6.2A2.2 2.2 0 0 1 5 5h14a2.2 2.2 0 0 1 1.8 1.2L12 12.7z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M12 12.7l-9-6.6A2.2 2.2 0 0 0 2 8.1V18a2 2 0 0 0 2 2h4.7l3.3-7.3z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 12.7l3.3 7.3H20a2 2 0 0 0 2-2V8.1a2.2 2.2 0 0 0-1-2l-9 6.6z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M2 8.1v-.1c0-.3.1-.6.2-.9L12 12.7l9.8-5.6c.1.3.2.6.2.9v.1l-10 7.3-10-7.3z"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/5 text-white/80"
                 aria-label="Continue with Facebook"
               >
-                f
-              </button>
-              <button
-                type="button"
-                className="h-10 w-10 rounded-full border border-white/45 bg-white/10 text-base font-bold"
-                aria-label="Continue with Twitter"
-              >
-                t
-              </button>
-              <button
-                type="button"
-                className="h-10 w-10 rounded-full border border-white/45 bg-white/10 text-base font-bold"
-                aria-label="Continue with Google"
-              >
-                G
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
+                  <path
+                    fill="#1877F2"
+                    d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z"
+                  />
+                </svg>
               </button>
             </div>
+          </div>
+          <div className="mt-auto flex justify-end">
+            <Link
+              href="/"
+              className="inline-flex text-xs uppercase tracking-[0.3em] text-[#d8caa7]/70 transition hover:text-[#f6e7c8]"
+            >
+              &larr; Return to the homepage
+            </Link>
           </div>
         </section>
       </div>
