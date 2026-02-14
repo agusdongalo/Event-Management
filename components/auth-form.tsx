@@ -27,6 +27,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -148,25 +150,87 @@ export function AuthForm({ mode }: AuthFormProps) {
                 className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                 required
               />
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder={mode === "login" ? "Your password" : "Create password"}
-                className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-                minLength={8}
-                required
-              />
-              {mode === "signup" ? (
+              <div className="relative">
                 <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
-                  placeholder="Repeat password"
-                  className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder={mode === "login" ? "Your password" : "Create password"}
+                  className="w-full border-b border-white/35 bg-transparent py-2 pr-16 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
                   minLength={8}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-2 text-[#d8caa7]/70 transition hover:text-[#f6e7c8] focus:outline-none focus-visible:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                  >
+                    {showPassword ? (
+                      <>
+                        <path d="M3 3l18 18" />
+                        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                        <path d="M9.5 5.2A10.7 10.7 0 0 1 12 5c5.3 0 9.1 4.4 10 7-0.34 1-1.2 2.7-2.7 4.2" />
+                        <path d="M6.2 6.2C4 7.8 2.6 10 2 12c0.5 1.6 2.1 4.6 5.4 6.2A10.8 10.8 0 0 0 12 19c1.3 0 2.6-0.2 3.8-0.7" />
+                      </>
+                    ) : (
+                      <>
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3.2" />
+                      </>
+                    )}
+                  </svg>
+                </button>
+              </div>
+              {mode === "signup" ? (
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.target.value)}
+                    placeholder="Repeat password"
+                    className="w-full border-b border-white/35 bg-transparent py-2 pr-16 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
+                    minLength={8}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-2 text-[#d8caa7]/70 transition hover:text-[#f6e7c8] focus:outline-none focus-visible:outline-none"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    >
+                      {showConfirmPassword ? (
+                        <>
+                          <path d="M3 3l18 18" />
+                          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                          <path d="M9.5 5.2A10.7 10.7 0 0 1 12 5c5.3 0 9.1 4.4 10 7-0.34 1-1.2 2.7-2.7 4.2" />
+                          <path d="M6.2 6.2C4 7.8 2.6 10 2 12c0.5 1.6 2.1 4.6 5.4 6.2A10.8 10.8 0 0 0 12 19c1.3 0 2.6-0.2 3.8-0.7" />
+                        </>
+                      ) : (
+                        <>
+                          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+                          <circle cx="12" cy="12" r="3.2" />
+                        </>
+                      )}
+                    </svg>
+                  </button>
+                </div>
               ) : null}
               {error ? <p className="text-sm text-red-300">{error}</p> : null}
               <button
