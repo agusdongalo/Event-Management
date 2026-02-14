@@ -97,10 +97,10 @@ export default async function Home() {
   );
 
   return (
-    <main className={`${bodyFont.className} bg-[#090b11] text-[#f3eee6]`}>
+    <main className={`${bodyFont.className} w-full overflow-x-hidden bg-[#090b11] text-[#f3eee6]`}>
       <section
         id="home"
-        className="relative min-h-screen overflow-hidden px-6 pb-14 pt-7 text-white md:px-10"
+        className="relative min-h-screen overflow-hidden px-5 pb-14 pt-6 text-white sm:px-6 md:px-10"
         style={{
           backgroundImage:
             "linear-gradient(120deg, rgba(9,11,17,0.86) 0%, rgba(16,22,36,0.82) 48%, rgba(36,18,42,0.7) 100%), url('https://images.unsplash.com/photo-1496337589254-7e19d01cec44?auto=format&fit=crop&w=2200&q=80')",
@@ -116,11 +116,11 @@ export default async function Home() {
               <div className="grid h-10 w-10 place-items-center rounded-full border border-[#d8b26f] bg-black/40 text-xs tracking-[0.25em] text-[#d8b26f]">
                 SE
               </div>
-              <p className={`${headingFont.className} text-4xl tracking-wide text-[#f6e7c8]`}>
+              <p className={`${headingFont.className} text-2xl tracking-wide text-[#f6e7c8] sm:text-4xl`}>
                 SuperDon Elite
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:flex-nowrap">
               {navActions}
               <div className="hidden items-center gap-2 md:flex">
                 <span className="grid h-8 w-8 place-items-center rounded-full border border-white/70 text-[10px]">
@@ -136,7 +136,7 @@ export default async function Home() {
             </div>
           </header>
 
-          <nav className="mt-6 flex flex-wrap justify-end gap-6 text-sm text-white/80">
+          <nav className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-white/80 sm:justify-end sm:gap-6">
             <a href="#home" className="hover:text-white">
               Home
             </a>
@@ -157,12 +157,12 @@ export default async function Home() {
             </a>
           </nav>
 
-          <div className="mx-auto mt-24 max-w-4xl text-center md:mt-32">
+          <div className="mx-auto mt-20 max-w-4xl text-center md:mt-32">
             <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">
               Private Event Operations
             </p>
             <h1
-              className={`${headingFont.className} mt-5 text-5xl leading-[1] md:text-7xl`}
+              className={`${headingFont.className} mt-5 text-4xl leading-[1.05] sm:text-5xl md:text-7xl`}
               data-aos="fade-up"
               data-aos-duration="1000"
               data-aos-delay="200"
@@ -170,33 +170,33 @@ export default async function Home() {
               The Private Event Platform for Elite Hosts
             </h1>
             <p
-              className="mx-auto mt-6 max-w-2xl text-base text-[#f5efe4]/90 md:text-xl"
+              className="mx-auto mt-5 max-w-2xl text-sm text-[#f5efe4]/90 sm:text-base md:text-xl"
               data-aos="fade-up"
               data-aos-delay="400"
             >
               Built for high-end event hosts who demand precision, privacy, and seamless guest flow.
             </p>
             <div
-              className="mt-10 flex flex-wrap items-center justify-center gap-4"
+              className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4"
               data-aos="fade-up"
               data-aos-delay="600"
             >
               <Link
                 href={primaryHref}
-                className="rounded-full bg-[#d8b26f] px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#151515] shadow-[0_0_28px_rgba(216,178,111,0.45)] transition hover:brightness-110"
+                className="w-full rounded-full bg-[#d8b26f] px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#151515] shadow-[0_0_28px_rgba(216,178,111,0.45)] transition hover:brightness-110 sm:w-auto"
               >
                 {user ? "CREATE EVENT" : "APPLY FOR ACCESS"}
               </Link>
               <Link
                 href={secondaryHref}
-                className="rounded-full border border-[#ead8b4] bg-black/35 px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#f8efde] transition hover:bg-black/55"
+                className="w-full rounded-full border border-[#ead8b4] bg-black/35 px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#f8efde] transition hover:bg-black/55 sm:w-auto"
               >
                 {user ? "VIEW DASHBOARD" : "VIEW DEMO"}
               </Link>
             </div>
           </div>
 
-          <div className="mt-16 flex justify-center gap-2">
+          <div className="mt-12 flex justify-center gap-2 sm:mt-16">
             <span className="h-2 w-2 rounded-full bg-[#f5e5bf]" />
             <span className="h-2 w-2 rounded-full bg-[#f5e5bf]/70" />
             <span className="h-2 w-2 rounded-full bg-[#f5e5bf]/45" />
@@ -204,10 +204,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="trust" className="bg-[#0b0f1a] px-6 py-16 md:px-10">
+      <section id="trust" className="bg-[#0b0f1a] px-5 py-14 sm:px-6 md:px-10">
         <div className="mx-auto w-full max-w-6xl">
           <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Trusted by</p>
-          <div className="mt-6 grid gap-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-[#cbd2e7] sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-6 grid grid-cols-2 gap-3 text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-[#cbd2e7] sm:grid-cols-3 sm:gap-4 sm:text-xs lg:grid-cols-6">
             {trustLogos.map((logo) => (
               <div
                 key={logo}
@@ -218,7 +218,7 @@ export default async function Home() {
             ))}
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {testimonials.map((item) => (
               <article
                 key={item.name}
@@ -235,9 +235,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="experience" className="bg-[#0d111d] px-6 py-16 md:px-10">
+      <section id="experience" className="bg-[#0d111d] px-5 py-14 sm:px-6 md:px-10">
         <div className="mx-auto w-full max-w-6xl">
-          <h2 className={`${headingFont.className} text-center text-5xl text-[#f6e7c8] md:text-6xl`}>
+          <h2 className={`${headingFont.className} text-center text-4xl text-[#f6e7c8] sm:text-5xl md:text-6xl`}>
             The Experience
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-[#b8bfd3] md:text-base">
@@ -255,7 +255,7 @@ export default async function Home() {
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-[#d8b26f] text-lg font-semibold text-[#d8b26f]">
                   0{index + 1}
                 </div>
-                <h3 className={`${headingFont.className} mt-5 text-4xl text-[#f7e9cc]`}>
+                <h3 className={`${headingFont.className} mt-5 text-3xl text-[#f7e9cc] sm:text-4xl`}>
                   {step.title}
                 </h3>
                 <p className="mt-2 text-sm text-[#b9c1d4]">{step.copy}</p>
@@ -265,17 +265,17 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="preview" className="bg-[#0a0f1b] px-6 py-16 md:px-10">
+      <section id="preview" className="bg-[#0a0f1b] px-5 py-14 sm:px-6 md:px-10">
         <div className="mx-auto w-full max-w-6xl">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">
                 Inside the Platform
               </p>
-              <h2 className={`${headingFont.className} mt-4 text-5xl text-[#f6e7c8] md:text-6xl`}>
+              <h2 className={`${headingFont.className} mt-4 text-4xl text-[#f6e7c8] sm:text-5xl md:text-6xl`}>
                 Inside the SuperDon Elite Platform
               </h2>
-              <p className="mt-5 max-w-xl text-sm text-[#b9c1d4] md:text-base">
+              <p className="mt-4 max-w-xl text-sm text-[#b9c1d4] md:text-base">
                 A glassmorphism interface built for premium operations: guest lists, live check-ins, and
                 real-time event insights in one serene workspace.
               </p>
@@ -376,19 +376,19 @@ export default async function Home() {
           }}
         />
         <div
-          className="grid min-h-[50vh] content-center bg-[#130f1f] px-8 py-14 text-white md:min-h-screen md:px-12"
+          className="grid min-h-[50vh] content-center bg-[#130f1f] px-6 py-12 text-white sm:px-8 md:min-h-screen md:px-12 md:py-14"
           data-aos="fade-left"
         >
           <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Value</p>
-          <h2 className={`${headingFont.className} mt-4 text-5xl text-[#f6e7c8] md:text-6xl`}>
+          <h2 className={`${headingFont.className} mt-4 text-4xl text-[#f6e7c8] sm:text-5xl md:text-6xl`}>
             Why Premium Hosts Choose Us
           </h2>
-          <ul className="mt-8 space-y-4 text-base text-[#d6d8e4]">
+          <ul className="mt-6 space-y-4 text-sm text-[#d6d8e4] sm:text-base">
             {premiumPoints.map((point) => (
               <li key={point}>{point}</li>
             ))}
           </ul>
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-[#2a3248] bg-[#101523] p-4 text-center">
               <p className="text-xs uppercase tracking-[0.3em] text-[#9aa4b8]">Overbooking</p>
               <p className="mt-2 text-3xl font-semibold text-[#f6e7c8]">0%</p>
@@ -405,10 +405,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="audience" className="bg-[#0b0f1a] px-6 py-16 md:px-10">
+      <section id="audience" className="bg-[#0b0f1a] px-5 py-14 sm:px-6 md:px-10">
         <div className="mx-auto w-full max-w-6xl">
           <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Designed for</p>
-          <h2 className={`${headingFont.className} mt-4 text-5xl text-[#f6e7c8] md:text-6xl`}>
+          <h2 className={`${headingFont.className} mt-4 text-4xl text-[#f6e7c8] sm:text-5xl md:text-6xl`}>
             Made for the Hosts Who Shape the Night
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -426,15 +426,15 @@ export default async function Home() {
 
       <section
         id="contact"
-        className="relative grid min-h-screen items-center overflow-hidden bg-[#050812] px-6 py-16"
+        className="relative grid min-h-screen items-center overflow-hidden bg-[#050812] px-5 py-14 sm:px-6 md:px-10"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,56,114,0.4),transparent_45%),radial-gradient(circle_at_70%_75%,rgba(82,42,116,0.22),transparent_45%)]" />
         <div
-          className="relative mx-auto w-full max-w-4xl rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 px-6 py-10 shadow-[0_26px_60px_rgba(0,0,0,0.5)] md:px-10 md:py-12"
+          className="relative mx-auto w-full max-w-4xl rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 px-5 py-9 shadow-[0_26px_60px_rgba(0,0,0,0.5)] sm:px-6 md:px-10 md:py-12"
           data-aos="fade-up"
           data-aos-duration="1000"
         >
-          <h2 className={`${headingFont.className} text-center text-5xl text-[#e2c48e] md:text-6xl`}>
+          <h2 className={`${headingFont.className} text-center text-4xl text-[#e2c48e] sm:text-5xl md:text-6xl`}>
             Apply for Elite Access
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-[#b9c1d4]">
@@ -476,7 +476,7 @@ export default async function Home() {
       </section>
 
       <footer className="bg-[#080b14] text-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-6 py-10 text-xs text-[#b0b8cd] md:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-5 py-10 text-xs text-[#b0b8cd] sm:flex-row sm:items-center sm:px-6 md:px-10">
           <div>
             <p className={`${headingFont.className} text-2xl text-[#f6e7c8]`}>SuperDon Elite</p>
             <p className="mt-2 max-w-xs text-xs text-[#9aa4b8]">
