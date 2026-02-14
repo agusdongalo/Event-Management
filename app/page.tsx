@@ -89,7 +89,7 @@ export default async function Home() {
       </Link>
       <Link
         href="/signup"
-        className="rounded-full border border-white/70 bg-white/20 px-4 py-1 text-xs font-extrabold tracking-wide text-white transition hover:bg-white hover:text-black"
+        className="rounded-full border border-[#ead8b4] bg-[#d8b26f] px-4 py-1 text-xs font-extrabold tracking-wide text-[#151515] transition hover:brightness-110"
       >
         SIGN UP
       </Link>
@@ -120,19 +120,8 @@ export default async function Home() {
                 SuperDon Elite
               </p>
             </div>
-            <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:flex-nowrap">
+            <div className="flex w-full flex-wrap items-center justify-between gap-8 sm:w-auto sm:flex-nowrap">
               {navActions}
-              <div className="hidden items-center gap-2 md:flex">
-                <span className="grid h-8 w-8 place-items-center rounded-full border border-white/70 text-[10px]">
-                  IG
-                </span>
-                <span className="grid h-8 w-8 place-items-center rounded-full border border-white/70 text-[10px]">
-                  IN
-                </span>
-                <span className="grid h-8 w-8 place-items-center rounded-full border border-white/70 text-[10px]">
-                  X
-                </span>
-              </div>
             </div>
           </header>
 
@@ -140,17 +129,11 @@ export default async function Home() {
             <a href="#home" className="hover:text-white">
               Home
             </a>
-            <a href="#trust" className="hover:text-white">
-              Trust
-            </a>
             <a href="#experience" className="hover:text-white">
               The Experience
             </a>
             <a href="#preview" className="hover:text-white">
               Platform
-            </a>
-            <a href="#value" className="hover:text-white">
-              Value
             </a>
             <a href="#contact" className="hover:text-white">
               Access
@@ -162,7 +145,7 @@ export default async function Home() {
               Private Event Operations
             </p>
             <h1
-              className={`${headingFont.className} mt-5 text-4xl leading-[1.05] sm:text-5xl md:text-7xl`}
+              className={`${headingFont.className} mt-7 text-4xl leading-[1.05] sm:text-5xl md:text-7xl`}
               data-aos="fade-up"
               data-aos-duration="1000"
               data-aos-delay="200"
@@ -194,12 +177,15 @@ export default async function Home() {
                 {user ? "VIEW DASHBOARD" : "VIEW DEMO"}
               </Link>
             </div>
+            <p className="mt-3 text-xs text-[#d8caa7]/70">
+              Access reserved for verified hosts and premium venues.
+            </p>
           </div>
 
           <div className="mt-12 flex justify-center gap-2 sm:mt-16">
-            <span className="h-2 w-2 rounded-full bg-[#f5e5bf]" />
-            <span className="h-2 w-2 rounded-full bg-[#f5e5bf]/70" />
-            <span className="h-2 w-2 rounded-full bg-[#f5e5bf]/45" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#f5e5bf]/65" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#f5e5bf]/45" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#f5e5bf]/30" />
           </div>
         </div>
       </section>
@@ -483,7 +469,7 @@ export default async function Home() {
               SuperDon Elite - Elevating events since 2024.
             </p>
           </div>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <a href="#" className="hover:text-[#f6e7c8]">
               About
             </a>
@@ -496,9 +482,50 @@ export default async function Home() {
             <a href="#" className="hover:text-[#f6e7c8]">
               Contact
             </a>
-            <a href="#" className="hover:text-[#f6e7c8]">
-              Instagram
-            </a>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#1877F2] text-[10px] shadow-[0_10px_20px_rgba(24,119,242,0.35)]">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5 fill-white"
+              >
+                <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z" />
+              </svg>
+            </span>
+            <span
+              className="grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(214,41,118,0.35)]"
+              style={{
+                background:
+                  "linear-gradient(135deg, #feda75 0%, #d62976 45%, #962fbf 70%, #4f5bd5 100%)",
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5 fill-none stroke-white"
+                strokeWidth="1.7"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="4" />
+                <circle cx="12" cy="12" r="3.5" />
+                <circle cx="17" cy="7" r="1" className="fill-white stroke-none" />
+              </svg>
+            </span>
+            <span
+              className="relative grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(238,29,82,0.28)]"
+              style={{
+                background:
+                  "linear-gradient(135deg, #69C9D0 0%, #010101 55%, #EE1D52 100%)",
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5 fill-white"
+              >
+                <path d="M21.6 7.2c-1.05.45-2.18.75-3.36.9-.32-.32-.76-.52-1.26-.52a2.7 2.7 0 0 0-2.7 2.7v4.52a6.83 6.83 0 1 1-5.93-6.77v2.39a4.5 4.5 0 1 0 3.83 4.43V2.4h2.4c.02.69.2 1.36.54 1.95.66 1.15 1.82 1.93 3.14 2.1v.75c1.21 0 2.37-.24 3.44-.7v1.7z" />
+              </svg>
+            </span>
           </div>
           <p>Copyright 2026 SuperDon Elite Events. All rights reserved.</p>
         </div>
