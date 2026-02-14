@@ -25,6 +25,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+[data-aos] {
+  transition-property: transform, opacity;
+}
+
 .organizer-theme {
   background: #f4f5fb;
   transition: filter 200ms ease;

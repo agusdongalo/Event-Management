@@ -161,13 +161,26 @@ export default async function Home() {
             <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">
               Private Event Operations
             </p>
-            <h1 className={`${headingFont.className} mt-5 text-5xl leading-[1] md:text-7xl`}>
+            <h1
+              className={`${headingFont.className} mt-5 text-5xl leading-[1] md:text-7xl`}
+              data-aos="fade-up"
+              data-aos-duration="1000"
+              data-aos-delay="200"
+            >
               The Private Event Platform for Elite Hosts
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base text-[#f5efe4]/90 md:text-xl">
+            <p
+              className="mx-auto mt-6 max-w-2xl text-base text-[#f5efe4]/90 md:text-xl"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
               Built for high-end event hosts who demand precision, privacy, and seamless guest flow.
             </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <div
+              className="mt-10 flex flex-wrap items-center justify-center gap-4"
+              data-aos="fade-up"
+              data-aos-delay="600"
+            >
               <Link
                 href={primaryHref}
                 className="rounded-full bg-[#d8b26f] px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#151515] shadow-[0_0_28px_rgba(216,178,111,0.45)] transition hover:brightness-110"
@@ -235,6 +248,9 @@ export default async function Home() {
               <article
                 key={step.title}
                 className="rounded-3xl border border-[#2a3248] bg-[#12192a] px-6 py-9 shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+                data-aos="fade-up"
+                data-aos-duration="800"
+                data-aos-delay={index === 0 ? "100" : index === 1 ? "250" : "400"}
               >
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-[#d8b26f] text-lg font-semibold text-[#d8b26f]">
                   0{index + 1}
@@ -264,7 +280,11 @@ export default async function Home() {
                 real-time event insights in one serene workspace.
               </p>
               <div className="mt-8 grid gap-4">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
+                <div
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
+                  data-aos="zoom-in"
+                  data-aos-duration="900"
+                >
                   <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Dashboard</p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-xl border border-white/10 bg-[#0e1626] p-4">
@@ -277,7 +297,11 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                  data-aos="zoom-in"
+                  data-aos-duration="900"
+                >
                   <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Guest List</p>
                   <div className="mt-4 space-y-3">
                     {["Aria Summers", "Noah Sinclair", "Lena Hart"].map((name) => (
@@ -297,7 +321,11 @@ export default async function Home() {
             </div>
 
             <div className="grid gap-6">
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+              <div
+                className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+                data-aos="zoom-in"
+                data-aos-duration="900"
+              >
                 <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Mobile Check-In</p>
                 <div className="mt-6 rounded-2xl border border-white/10 bg-[#0e1626] p-5">
                   <div className="flex items-center justify-between text-xs text-[#9aa4b8]">
@@ -311,7 +339,11 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-3xl border border-white/10 bg-[#101827] p-6">
+              <div
+                className="rounded-3xl border border-white/10 bg-[#101827] p-6"
+                data-aos="zoom-in"
+                data-aos-duration="900"
+              >
                 <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Insights</p>
                 <p className="mt-4 text-sm text-[#b9c1d4]">
                   See arrivals, guest tiers, and revenue in seconds with a calm, focused interface.
@@ -335,6 +367,7 @@ export default async function Home() {
       <section id="value" className="grid min-h-screen md:grid-cols-2">
         <div
           className="min-h-[50vh] md:min-h-screen"
+          data-aos="fade-right"
           style={{
             backgroundImage:
               "linear-gradient(45deg, rgba(9,8,20,0.76), rgba(78,34,98,0.38)), url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1600&q=80')",
@@ -342,7 +375,10 @@ export default async function Home() {
             backgroundSize: "cover",
           }}
         />
-        <div className="grid min-h-[50vh] content-center bg-[#130f1f] px-8 py-14 text-white md:min-h-screen md:px-12">
+        <div
+          className="grid min-h-[50vh] content-center bg-[#130f1f] px-8 py-14 text-white md:min-h-screen md:px-12"
+          data-aos="fade-left"
+        >
           <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Value</p>
           <h2 className={`${headingFont.className} mt-4 text-5xl text-[#f6e7c8] md:text-6xl`}>
             Why Premium Hosts Choose Us
@@ -393,7 +429,11 @@ export default async function Home() {
         className="relative grid min-h-screen items-center overflow-hidden bg-[#050812] px-6 py-16"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,56,114,0.4),transparent_45%),radial-gradient(circle_at_70%_75%,rgba(82,42,116,0.22),transparent_45%)]" />
-        <div className="relative mx-auto w-full max-w-4xl rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 px-6 py-10 shadow-[0_26px_60px_rgba(0,0,0,0.5)] md:px-10 md:py-12">
+        <div
+          className="relative mx-auto w-full max-w-4xl rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 px-6 py-10 shadow-[0_26px_60px_rgba(0,0,0,0.5)] md:px-10 md:py-12"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
           <h2 className={`${headingFont.className} text-center text-5xl text-[#e2c48e] md:text-6xl`}>
             Apply for Elite Access
           </h2>
