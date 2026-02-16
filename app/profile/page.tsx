@@ -85,23 +85,6 @@ export default async function ProfilePage() {
               </div>
             </div>
           </div>
-          <div className="mt-6 grid gap-4 lg:grid-cols-3">
-            <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Upcoming</p>
-              <p className={`${headingFont.className} mt-3 text-3xl text-[#f6e7c8]`}>3</p>
-              <p className="mt-1 text-xs text-[#9aa4b8]">Events in your calendar</p>
-            </div>
-            <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Tickets</p>
-              <p className={`${headingFont.className} mt-3 text-3xl text-[#f6e7c8]`}>2</p>
-              <p className="mt-1 text-xs text-[#9aa4b8]">Active passes</p>
-            </div>
-            <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Member tier</p>
-              <p className="mt-3 text-sm font-semibold text-[#f3eee6]">Standard Attendee</p>
-              <p className="mt-1 text-xs text-[#9aa4b8]">Upgrade anytime</p>
-            </div>
-          </div>
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-3">

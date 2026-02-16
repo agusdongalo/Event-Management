@@ -73,6 +73,42 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
+      <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] p-4">
+        <div className="mt-3 grid gap-4 sm:grid-cols-[auto_1fr] sm:items-center">
+          <div className="flex flex-col items-start gap-3">
+            <div className="grid h-14 w-14 place-items-center rounded-full border border-[#ead8b4] bg-[#151b2c] text-sm font-semibold text-[#f6e7c8]">
+              {name.slice(0, 1).toUpperCase()}
+            </div>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-full border border-[#2a3248] bg-[#0f141f] px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-[#d8b26f] transition hover:border-[#d8b26f]/60"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 7h3l2-2h6l2 2h3v12H4z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+              Change photo
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 justify-start sm:justify-end">
+            <input
+              id="profile-photo"
+              type="file"
+              accept="image/*"
+              className="text-xs text-[#b9c1d4] file:mr-3 file:rounded-full file:border-0 file:bg-[#1a2236] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-[0.2em] file:text-[#f6e7c8]"
+            />
+          </div>
+        </div>
+      </div>
       <div>
         <label className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Full name</label>
         <input
