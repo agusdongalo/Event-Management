@@ -44,6 +44,7 @@ export default async function AttendeeAccountPage() {
     },
   });
 
+
   const approvedRegistrations = registrations.filter(
     (registration) => registration.status === "APPROVED" || registration.status === "REGISTERED"
   );
@@ -55,17 +56,38 @@ export default async function AttendeeAccountPage() {
     (registration) => registration.event.startAt < today
   );
 
-  const quickStats = [
-    { label: "Active Tickets", value: approvedRegistrations.length.toString() },
-    { label: "Upcoming Events", value: upcomingRegistrations.length.toString() },
-    { label: "Saved Events", value: "0" },
-  ];
-
-  const upcomingEvents = upcomingRegistrations.slice(0, 3).map((registration) => ({
+  const upcomingRegistered = upcomingRegistrations.slice(0, 3).map((registration) => ({
     name: registration.event.title,
     date: formatDate(registration.event.startAt),
     status: "Registered",
   }));
+
+  const upcomingFromAllEvents = await prisma.event.findMany({
+    where: {
+      startAt: { gte: today },
+    },
+    orderBy: { startAt: "asc" },
+    take: 3,
+    select: { title: true, startAt: true },
+  });
+
+  const upcomingCount =
+    upcomingRegistrations.length > 0 ? upcomingRegistrations.length : upcomingFromAllEvents.length;
+
+  const quickStats = [
+    { label: "Active Tickets", value: approvedRegistrations.length.toString() },
+    { label: "Upcoming Events", value: upcomingCount.toString() },
+    { label: "Saved Events", value: "0" },
+  ];
+
+  const upcomingEvents =
+    upcomingRegistered.length > 0
+      ? upcomingRegistered
+      : upcomingFromAllEvents.map((event) => ({
+          name: event.title,
+          date: formatDate(event.startAt),
+          status: "Upcoming",
+        }));
 
   const recentEvents = pastRegistrations.slice(0, 2).map((registration) => ({
     name: registration.event.title,
@@ -102,7 +124,7 @@ export default async function AttendeeAccountPage() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link
-                href="/attendee/events"
+                href="/events"
                 className="attendee-gold-cta rounded-full border border-[#ead8b4] bg-black/40 px-4 py-2 text-xs font-semibold text-[#f6e7c8] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition hover:bg-black/60"
               >
                 Browse Events

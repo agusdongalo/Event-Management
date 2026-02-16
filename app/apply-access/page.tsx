@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import VisitorSignupClient from "./visitor-signup-client";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -63,49 +64,7 @@ export default function ApplyAccessPage() {
         </section>
 
         <section className="flex flex-1 flex-col border-l border-white/10 bg-black/40 px-7 py-8 md:px-12 md:py-10">
-          <form className="space-y-5">
-            <h2 className={`${headingFont.className} text-4xl font-semibold`}>Create your visitor profile</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <input
-                placeholder="First name"
-                className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-                required
-              />
-              <input
-                placeholder="Last name"
-                className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-                required
-              />
-            </div>
-            <input
-              type="email"
-              placeholder="Email address"
-              className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-              required
-            />
-            <input
-              placeholder="City or area"
-              className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-              required
-            />
-            <input
-              placeholder="Phone number (optional)"
-              className="w-full border-b border-white/35 bg-transparent py-2 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-            />
-            <textarea
-              placeholder="What kinds of events do you enjoy?"
-              className="min-h-[120px] w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-[#b9c1d4]"
-            />
-            <button
-              type="submit"
-              className="w-full rounded-full bg-[linear-gradient(90deg,#ba9054_0%,#e2c48e_55%,#c89f63_100%)] px-4 py-3 text-sm font-semibold text-[#151515] shadow-[0_12px_30px_rgba(216,178,111,0.35)] transition hover:brightness-110"
-            >
-              Sign Up
-            </button>
-            <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60">
-              Visitor access
-            </p>
-          </form>
+          <VisitorSignupClient headingClassName={headingFont.className} />
           <div className="mt-auto flex justify-end">
             <Link
               href="/"

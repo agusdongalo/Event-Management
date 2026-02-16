@@ -326,7 +326,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               </div>
             </div>
           </div>
-          <div className="mt-auto flex justify-end">
+          <div className="mt-auto flex justify-end pt-6">
             <Link
               href="/"
               className="inline-flex text-xs uppercase tracking-[0.3em] text-[#d8caa7]/70 transition hover:text-[#f6e7c8]"
