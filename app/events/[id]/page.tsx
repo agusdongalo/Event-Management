@@ -23,6 +23,12 @@ const formatDate = (date: Date) =>
     year: "numeric",
   });
 
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
 type Props = {
   params: Promise<{ id: string }>;
 };
@@ -61,7 +67,7 @@ export default async function EventDetailPage({ params }: Props) {
             Event not found
           </h1>
           <p className="mt-3 text-sm text-[#cbd2e7]">
-            The event you tried to open doesn’t exist or was removed.
+            The event you tried to open doesn't exist or was removed.
           </p>
           <a
             href="/events"
@@ -100,11 +106,11 @@ export default async function EventDetailPage({ params }: Props) {
       className={`${bodyFont.className} min-h-screen px-4 py-10 text-[#f3eee6] md:px-10`}
       style={{
         background:
-          "radial-gradient(circle at 15% 10%, rgba(216,178,111,0.15), transparent 40%), radial-gradient(circle at 85% 20%, rgba(92,88,126,0.22), transparent 45%), #090b11",
+          "radial-gradient(circle at 12% 12%, rgba(219,170,98,0.18), transparent 45%), radial-gradient(circle at 82% 18%, rgba(90,126,201,0.2), transparent 40%), radial-gradient(circle at 50% 90%, rgba(27,39,72,0.55), transparent 55%), #07090f",
       }}
     >
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
           <section className="flex-1">
             <a
               href="/attendee/events"
@@ -124,25 +130,60 @@ export default async function EventDetailPage({ params }: Props) {
               </svg>
               Back to events
             </a>
-            <p className="mt-4 text-xs uppercase tracking-[0.4em] text-[#d8b26f]">Event</p>
-            <h1 className={`${headingFont.className} mt-3 text-4xl text-[#f6e7c8] md:text-5xl`}>
-              {event.title}
-            </h1>
-            <div className="mt-3 flex flex-wrap gap-3 text-sm text-[#cbd2e7]">
-              <span>{formatDate(event.startAt)}</span>
-              <span>·</span>
-              <span>{event.venue}</span>
-              <span>·</span>
-              <span>{seatsLeft} seats left</span>
+
+            <div className="mt-6 rounded-3xl border border-white/10 bg-gradient-to-br from-[#121725] via-[#0d1322] to-[#0a0f1b] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+              <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">
+                Visitor pass
+              </p>
+              <h1 className={`${headingFont.className} mt-3 text-4xl text-[#f6e7c8] md:text-5xl`}>
+                {event.title}
+              </h1>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm text-[#cbd2e7]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  {formatDate(event.startAt)}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  {formatTime(event.startAt)}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  {event.venue}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#d8b26f]/40 bg-[#d8b26f]/10 px-3 py-1 text-[#f6e7c8]">
+                  {seatsLeft} seats left
+                </span>
+              </div>
+              <div className="mt-4 text-sm text-[#cbd2e7]">
+                Hosted by{" "}
+                <span className="font-semibold text-[#f6e7c8]">{event.organizer.name}</span>{" "}
+                <span className="text-[#9aa4b8]">({event.organizer.email})</span>
+              </div>
+              {event.description ? (
+                <p className="mt-5 text-sm leading-7 text-[#cbd2e7]">{event.description}</p>
+              ) : null}
             </div>
-            <div className="mt-3 text-sm text-[#cbd2e7]">
-              Event organizer:{" "}
-              <span className="font-semibold text-[#f6e7c8]">{event.organizer.name}</span>{" "}
-              <span className="text-[#9aa4b8]">({event.organizer.email})</span>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Arrival</p>
+                <p className="mt-2 text-sm text-[#cbd2e7]">
+                  Doors open 30 minutes early. Bring your confirmation for fast check-in.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">
+                  Experience
+                </p>
+                <p className="mt-2 text-sm text-[#cbd2e7]">
+                  Curated networking, live moments, and an immersive venue setup.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">Dress code</p>
+                <p className="mt-2 text-sm text-[#cbd2e7]">
+                  Smart casual. Photo-friendly colors recommended.
+                </p>
+              </div>
             </div>
-            {event.description ? (
-              <p className="mt-5 text-sm leading-7 text-[#cbd2e7]">{event.description}</p>
-            ) : null}
 
             {existingRegistration ? (
               <div
@@ -184,12 +225,35 @@ export default async function EventDetailPage({ params }: Props) {
           </section>
 
           <aside className="w-full max-w-xl">
-            <EventRegisterClient
-              eventId={event.id}
-              seatsLeft={seatsLeft}
-              registeredTier={existingRegistration?.tier ?? null}
-              registrationStatus={registrationStatus}
-            />
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#151b2c] via-[#0d1322] to-[#0a0f1b] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.45)]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">
+                Reserve your spot
+              </p>
+              <p className="mt-2 text-sm text-[#cbd2e7]">
+                Choose your pass tier and submit a request. We'll notify you as soon as it is
+                approved.
+              </p>
+              <div className="mt-5">
+                <EventRegisterClient
+                  eventId={event.id}
+                  seatsLeft={seatsLeft}
+                  registeredTier={existingRegistration?.tier ?? null}
+                  registrationStatus={registrationStatus}
+                />
+              </div>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-[#cbd2e7]">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#d8b26f]">
+                  Need help?
+                </p>
+                <p className="mt-2">
+                  Questions about entry or tiers? Contact{" "}
+                  <span className="font-semibold text-[#f6e7c8]">
+                    {event.organizer.name}
+                  </span>
+                  .
+                </p>
+              </div>
+            </div>
           </aside>
         </div>
       </div>

@@ -172,14 +172,6 @@ export default async function EventsPage() {
               Browse premium events, manage invitations, and monitor guest flow with precision.
             </p>
           </div>
-          {user?.role === "ADMIN" ? (
-            <Link
-              href="/events/new"
-              className="rounded-full bg-[#d8b26f] px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#151515] shadow-[0_12px_30px_rgba(216,178,111,0.35)] transition hover:brightness-110"
-            >
-              Create Event
-            </Link>
-          ) : null}
         </header>
 
         <section className="mt-8 grid gap-3 rounded-2xl border border-[#2a3248] bg-[#12192a] p-4 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
