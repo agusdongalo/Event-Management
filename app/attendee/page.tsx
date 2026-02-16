@@ -75,7 +75,7 @@ export default async function AttendeeAccountPage() {
     upcomingRegistrations.length > 0 ? upcomingRegistrations.length : upcomingFromAllEvents.length;
 
   const quickStats = [
-    { label: "Active Tickets", value: approvedRegistrations.length.toString() },
+    { label: "Active Tickets", value: upcomingRegistrations.length.toString() },
     { label: "Upcoming Events", value: upcomingCount.toString() },
     { label: "Saved Events", value: "0" },
   ];
