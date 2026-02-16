@@ -85,7 +85,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           "radial-gradient(circle at 20% 20%, rgba(216,178,111,0.22), transparent 40%), radial-gradient(circle at 80% 30%, rgba(92,88,126,0.24), transparent 45%), #090b11",
       }}
     >
-      <div className="mx-auto grid min-h-[82vh] w-full max-w-6xl overflow-hidden rounded-[32px] border border-white/10 bg-black/55 shadow-[0_30px_90px_rgba(0,0,0,0.55)] backdrop-blur-md md:grid-cols-[1fr_1.05fr]">
+      <div className="mx-auto grid min-h-[76vh] w-full max-w-6xl overflow-hidden rounded-[32px] border border-white/10 bg-black/55 shadow-[0_30px_90px_rgba(0,0,0,0.55)] backdrop-blur-md md:grid-cols-[1.05fr_0.95fr]">
         <section className="relative flex flex-col justify-between overflow-hidden p-8 md:p-10">
           <div
             className="pointer-events-none absolute inset-0 opacity-70"
@@ -94,7 +94,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 "radial-gradient(circle at 15% 20%, rgba(216,178,111,0.28), transparent 42%), radial-gradient(circle at 85% 70%, rgba(92,88,126,0.26), transparent 45%)",
             }}
           />
-          <div className="relative max-w-md space-y-6">
+          <div className="relative max-w-lg space-y-6">
             <div>
               <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">
                 SuperDon Elite
@@ -115,21 +115,43 @@ export function AuthForm({ mode }: AuthFormProps) {
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3">
                   <span className="grid h-5 w-5 place-items-center rounded-full border border-[#d8b26f] text-[10px] text-[#d8b26f]">
-                    ✓
+                    OK
                   </span>
                   {item}
                 </li>
               ))}
             </ul>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { label: "Approval rate", value: "98%" },
+                { label: "Avg check-in", value: "4.7s" },
+                { label: "VIP events", value: "320+" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center"
+                >
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#c7cfdf]">
+                    {stat.label}
+                  </p>
+                  <p className={`${headingFont.className} mt-2 text-2xl text-[#f6e7c8]`}>
+                    {stat.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
           <p className="relative mt-10 text-xs uppercase tracking-[0.3em] text-[#d8caa7]/70">
             Event Management Platform
           </p>
         </section>
 
-        <section className="flex flex-col border-l border-white/10 bg-black/40 px-7 py-8 md:px-12 md:py-10">
-          <div className="grid gap-8 md:grid-cols-[1fr_auto]">
-            <form onSubmit={onSubmit} className="space-y-5">
+        <section className="flex flex-col bg-black/40 px-7 py-8 md:px-10 md:py-10">
+          <div className="flex flex-col gap-6">
+            <form
+              onSubmit={onSubmit}
+              className="space-y-5 rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+            >
               <h2 className={`${headingFont.className} text-4xl font-semibold`}>
                 {mode === "login" ? "Sign In" : "Sign Up"}
               </h2>
@@ -258,44 +280,50 @@ export function AuthForm({ mode }: AuthFormProps) {
               ) : null}
             </form>
 
-            <div className="flex flex-col items-center justify-center gap-5 border-l border-white/10 pl-6 text-center">
-              <p className="text-[10px] tracking-[0.3em] text-[#b9c1d4]">OR</p>
-              <button
-                type="button"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/5 text-white/80"
-                aria-label="Continue with Gmail"
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
-                  <path
-                    fill="#EA4335"
-                    d="M12 12.7L3.2 6.2A2.2 2.2 0 0 1 5 5h14a2.2 2.2 0 0 1 1.8 1.2L12 12.7z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M12 12.7l-9-6.6A2.2 2.2 0 0 0 2 8.1V18a2 2 0 0 0 2 2h4.7l3.3-7.3z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 12.7l3.3 7.3H20a2 2 0 0 0 2-2V8.1a2.2 2.2 0 0 0-1-2l-9 6.6z"
-                  />
-                  <path
-                    fill="#4285F4"
-                    d="M2 8.1v-.1c0-.3.1-.6.2-.9L12 12.7l9.8-5.6c.1.3.2.6.2.9v.1l-10 7.3-10-7.3z"
-                  />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/5 text-white/80"
-                aria-label="Continue with Facebook"
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
-                  <path
-                    fill="#1877F2"
-                    d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z"
-                  />
-                </svg>
-              </button>
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+              <p className="text-[10px] uppercase tracking-[0.35em] text-[#b9c1d4]">
+                Or continue with
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80"
+                  aria-label="Continue with Gmail"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
+                    <path
+                      fill="#EA4335"
+                      d="M12 12.7L3.2 6.2A2.2 2.2 0 0 1 5 5h14a2.2 2.2 0 0 1 1.8 1.2L12 12.7z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M12 12.7l-9-6.6A2.2 2.2 0 0 0 2 8.1V18a2 2 0 0 0 2 2h4.7l3.3-7.3z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 12.7l3.3 7.3H20a2 2 0 0 0 2-2V8.1a2.2 2.2 0 0 0-1-2l-9 6.6z"
+                    />
+                    <path
+                      fill="#4285F4"
+                      d="M2 8.1v-.1c0-.3.1-.6.2-.9L12 12.7l9.8-5.6c.1.3.2.6.2.9v.1l-10 7.3-10-7.3z"
+                    />
+                  </svg>
+                  Gmail
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80"
+                  aria-label="Continue with Facebook"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
+                    <path
+                      fill="#1877F2"
+                      d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z"
+                    />
+                  </svg>
+                  Facebook
+                </button>
+              </div>
             </div>
           </div>
           <div className="mt-auto flex justify-end">
