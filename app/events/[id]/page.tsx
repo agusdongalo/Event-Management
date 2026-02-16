@@ -113,7 +113,7 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
           <section className="flex-1">
             <a
-              href="/attendee/events"
+              href="/events"
               className="inline-flex items-center gap-2 rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
             >
               <svg

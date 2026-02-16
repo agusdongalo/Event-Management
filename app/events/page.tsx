@@ -89,14 +89,7 @@ const formatDate = (date: Date) =>
 
 export default async function EventsPage() {
   const user = await getCurrentUser();
-  const backHref =
-    user?.role === "ADMIN"
-      ? "/admin"
-      : user?.role === "ORGANIZER"
-        ? "/organizer"
-        : user?.role === "USER"
-          ? "/attendee"
-          : "/";
+  const backHref = "/";
 
   const dbEvents = await prisma.event.findMany({
     orderBy: { startAt: "asc" },
@@ -159,7 +152,7 @@ export default async function EventsPage() {
             >
               <path d="M15 18l-6-6 6-6" />
             </svg>
-            Back to dashboard
+            Back to homepage
           </a>
         </div>
         <header className="flex flex-wrap items-center justify-between gap-4">
@@ -197,10 +190,8 @@ export default async function EventsPage() {
 
         <section className="mt-10 grid gap-6 lg:grid-cols-2">
           {featuredEvents.map((event) => (
-            <EventCardLink
+            <div
               key={event.title}
-              href={event.id ? `/events/${event.id}` : "/events"}
-              ariaLabel={`View details for ${event.title}`}
               className="relative z-10 overflow-hidden rounded-3xl border border-[#2a3248] bg-[#101827]"
             >
               <div
@@ -217,12 +208,15 @@ export default async function EventsPage() {
                   {event.date} ?? {event.venue}
                 </p>
                 <div className="pt-4">
-                  <span className="inline-flex items-center rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition group-hover:bg-black/55">
+                  <Link
+                    href={event.id ? `/events/${event.id}` : "/events"}
+                    className="inline-flex items-center rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
+                  >
                     View Details
-                  </span>
+                  </Link>
                 </div>
               </div>
-            </EventCardLink>
+            </div>
           ))}
         </section>
 
@@ -266,10 +260,10 @@ export default async function EventsPage() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/events/new"
+              href="/signup"
               className="rounded-full bg-[#d8b26f] px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#151515] transition hover:brightness-110"
             >
-              Start Event
+              Sign Up
             </Link>
             <Link
               href="/apply-access"

@@ -74,7 +74,7 @@ const audience = [
 export default async function Home() {
   const user = await getCurrentUser();
 
-  const primaryHref = user ? "/events/new" : "#contact";
+  const primaryHref = "#contact";
   const secondaryHref = user ? "/events" : "/login";
 
   const navActions = (
@@ -452,7 +452,7 @@ export default async function Home() {
                 href={primaryHref}
                 className="inline-flex h-12 min-w-48 items-center justify-center rounded-full bg-[linear-gradient(90deg,#ba9054_0%,#e2c48e_55%,#c89f63_100%)] px-9 text-sm font-bold tracking-[0.16em] text-[#16140f] shadow-[0_0_30px_rgba(216,178,111,0.35)] transition hover:brightness-110"
               >
-                {user ? "CREATE EVENT" : "REQUEST ACCESS"}
+                SUBMIT REQUEST
               </Link>
             </div>
           </form>
