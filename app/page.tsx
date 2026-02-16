@@ -74,7 +74,7 @@ const audience = [
 export default async function Home() {
   const user = await getCurrentUser();
 
-  const primaryHref = "#contact";
+  const primaryHref = "#host-access";
   const secondaryHref = user ? "/events" : "/login";
 
   const navActions = (
@@ -133,7 +133,7 @@ export default async function Home() {
             <a href="#preview" className="hover:text-white">
               Platform
             </a>
-            <a href="#contact" className="hover:text-white">
+            <a href="#host-access" className="hover:text-white">
               Access
             </a>
           </nav>
@@ -166,7 +166,7 @@ export default async function Home() {
                 href={primaryHref}
                 className="w-full rounded-full bg-[#d8b26f] px-9 py-3 text-sm font-bold tracking-[0.16em] text-[#151515] shadow-[0_0_28px_rgba(216,178,111,0.45)] transition hover:brightness-110 sm:w-auto"
               >
-                {user ? "CREATE EVENT" : "APPLY FOR ACCESS"}
+                {user ? "CREATE EVENT" : "HOST ACCESS"}
               </Link>
               <Link
                 href={secondaryHref}
@@ -176,7 +176,7 @@ export default async function Home() {
               </Link>
             </div>
             <p className="mt-3 text-xs text-[#d8caa7]/70">
-              Access reserved for verified hosts and premium venues.
+              Host access reserved for verified organizers and premium venues.
             </p>
           </div>
 
@@ -408,8 +408,46 @@ export default async function Home() {
         </div>
       </section>
 
+
+      <section className="bg-[#050812] px-5 py-14 sm:px-6 md:px-10">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 p-8 shadow-[0_26px_60px_rgba(0,0,0,0.5)]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Visitors</p>
+              <h2 className={`${headingFont.className} mt-4 text-3xl text-[#e2c48e] sm:text-4xl`}>
+                Join as a Visitor
+              </h2>
+              <p className="mt-3 text-sm text-[#b9c1d4]">
+                Create a visitor profile to reserve seats, track your requests, and receive curated
+                event updates.
+              </p>
+              <div className="mt-6">
+                <Link
+                  href="/apply-access"
+                  className="inline-flex rounded-full border border-[#ead8b4] bg-black/35 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
+                >
+                  Visitor Sign Up
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-[28px] border border-[#2e3448] bg-[#0a1020]/88 p-8 shadow-[0_26px_60px_rgba(0,0,0,0.5)]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d8b26f]">Hosts</p>
+              <h2 className={`${headingFont.className} mt-4 text-3xl text-[#e2c48e] sm:text-4xl`}>
+                Apply for Host Access
+              </h2>
+              <p className="mt-3 text-sm text-[#b9c1d4]">
+                Host access unlocks event creation, invite management, and dashboard insights.
+              </p>
+              <p className="mt-3 text-xs uppercase tracking-[0.28em] text-[#d8caa7]/60">
+                Verified hosts &amp; venues only
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section
-        id="contact"
+        id="host-access"
         className="relative grid min-h-screen items-center overflow-hidden bg-[#050812] px-5 py-14 sm:px-6 md:px-10"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,56,114,0.4),transparent_45%),radial-gradient(circle_at_70%_75%,rgba(82,42,116,0.22),transparent_45%)]" />
@@ -419,10 +457,10 @@ export default async function Home() {
           data-aos-duration="1000"
         >
           <h2 className={`${headingFont.className} text-center text-4xl text-[#e2c48e] sm:text-5xl md:text-6xl`}>
-            Apply for Elite Access
+            Apply for Host Access
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-[#b9c1d4]">
-            Access reserved for verified hosts and premium venues.
+            Get access to create and manage premium events.
           </p>
           <form className="mx-auto mt-10 max-w-2xl space-y-3">
             <div className="grid gap-3 md:grid-cols-2">

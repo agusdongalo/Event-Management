@@ -240,18 +240,22 @@ export function AuthForm({ mode }: AuthFormProps) {
               >
                 {loading ? "Please wait..." : mode === "login" ? "Sign In" : "Sign Up"}
               </button>
-              <p className="text-xs text-[#cbd2e7]">
-                {mode === "login" ? "Not a member?" : "Already a member?"}{" "}
+              {mode === "signup" ? (
+                <p className="text-xs text-[#cbd2e7]">
+                  Already a member?{" "}
+                  <Link href="/login" className="font-semibold text-[#e2c48e]">
+                    Sign in
+                  </Link>
+                </p>
+              ) : null}
+              {mode === "signup" ? (
                 <Link
-                  href={mode === "login" ? "/apply-access" : "/login"}
-                  className="font-semibold text-[#e2c48e]"
+                  href="/apply-access"
+                  className="text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60 transition hover:text-[#f6e7c8]"
                 >
-                  {mode === "login" ? "Apply for Access" : "Sign in"}
+                  SIGN UP AS VISITOR
                 </Link>
-              </p>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60">
-                Verified hosts &amp; venues only
-              </p>
+              ) : null}
             </form>
 
             <div className="flex flex-col items-center justify-center gap-5 border-l border-white/10 pl-6 text-center">
