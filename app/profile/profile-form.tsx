@@ -1,13 +1,22 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   initialName: string;
   initialEmail: string;
+  initialAvatarUrl?: string | null;
+  onSaved?: () => void;
 };
 
-export default function ProfileForm({ initialName, initialEmail }: Props) {
+export default function ProfileForm({
+  initialName,
+  initialEmail,
+  initialAvatarUrl,
+  onSaved,
+}: Props) {
+  const router = useRouter();
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
   const [loading, setLoading] = useState(false);
@@ -16,6 +25,27 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState(initialAvatarUrl ?? "");
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
+  function handleAvatarChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    setAvatarFile(file);
+    if (!file) {
+      setAvatarPreview(initialAvatarUrl ?? "");
+      return;
+    }
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarPreview(previewUrl);
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,15 +72,16 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
     }
 
     try {
+      const formData = new FormData();
+      formData.set("name", name);
+      formData.set("email", email);
+      if (currentPassword) formData.set("currentPassword", currentPassword);
+      if (newPassword) formData.set("newPassword", newPassword);
+      if (avatarFile) formData.set("avatar", avatarFile);
+
       const response = await fetch("/api/profile", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          currentPassword: currentPassword || undefined,
-          newPassword: newPassword || undefined,
-        }),
+        body: formData,
       });
 
       const data = (await response.json()) as { error?: string; message?: string };
@@ -64,6 +95,9 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      setAvatarFile(null);
+      onSaved?.();
+      router.refresh();
     } catch {
       setError("Unable to update profile.");
     } finally {
@@ -75,11 +109,23 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
     <form onSubmit={onSubmit} className="space-y-5">
       <div className="w-[150px] rounded-2xl border border-[#27314b] bg-[#0f141f] p-3">
         <div className="flex flex-col items-center gap-2">
-          <div className="grid h-20 w-20 place-items-center rounded-full border border-[#ead8b4] bg-[#151b2c] text-lg font-semibold text-[#f6e7c8] shadow-[0_0_28px_rgba(216,178,111,0.28)]">
-            {name.slice(0, 1).toUpperCase()}
+          <div className="grid h-20 w-20 place-items-center overflow-hidden rounded-full border border-[#ead8b4] bg-[#151b2c] text-lg font-semibold text-[#f6e7c8] shadow-[0_0_28px_rgba(216,178,111,0.28)]">
+            {avatarPreview ? (
+              <img src={avatarPreview} alt="" className="h-full w-full object-cover" />
+            ) : (
+              name.slice(0, 1).toUpperCase()
+            )}
           </div>
-          <button
-            type="button"
+          <input
+            id="avatar-upload"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="sr-only"
+            onChange={handleAvatarChange}
+            disabled={loading}
+          />
+          <label
+            htmlFor="avatar-upload"
             className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[#d8b26f]/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d8b26f] transition hover:border-[#d8b26f] hover:text-[#f6e7c8]"
           >
             <svg
@@ -96,7 +142,7 @@ export default function ProfileForm({ initialName, initialEmail }: Props) {
               <circle cx="12" cy="13" r="3" />
             </svg>
             Change photo
-          </button>
+          </label>
         </div>
       </div>
       <div>

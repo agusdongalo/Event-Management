@@ -30,6 +30,17 @@ export default async function ProfilePage() {
     },
   });
 
+  const membership = user.membershipTier ?? "Standard Attendee";
+  const notifications = user.notificationPreference ?? "Email + SMS";
+  const paymentMethod =
+    user.paymentBrand && user.paymentLast4
+      ? `${user.paymentBrand} **** ${user.paymentLast4}`
+      : "Visa **** 4242";
+  const preferenceCity = user.preferenceCity ?? "Manila";
+  const preferenceEventType = user.preferenceEventType ?? "Live music";
+  const preferenceTimeSlot = user.preferenceTimeSlot ?? "Evenings";
+  const preferenceAlerts = user.preferenceAlerts ?? "Instant";
+
   return (
     <main
       className={`${bodyFont.className} min-h-screen px-4 py-10 text-[#f3eee6] md:px-10`}
@@ -61,7 +72,15 @@ export default async function ProfilePage() {
         <div className="mt-6 rounded-3xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_26px_60px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-center gap-6">
             <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-[#ead8b4] bg-[#0f141f] text-xl font-semibold text-[#f6e7c8]">
-              {user.name.slice(0, 1).toUpperCase()}
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                user.name.slice(0, 1).toUpperCase()
+              )}
             </div>
             <div className="flex-1">
               <p className={`${headingFont.className} text-2xl text-[#f6e7c8]`}>
@@ -73,6 +92,7 @@ export default async function ProfilePage() {
                   headingClassName={headingFont.className}
                   initialName={user.name}
                   initialEmail={user.email}
+                  initialAvatarUrl={user.avatarUrl}
                 />
               </div>
             </div>
@@ -90,15 +110,15 @@ export default async function ProfilePage() {
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
             <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Membership</p>
-            <p className="mt-2 font-semibold text-[#f3eee6]">Standard Attendee</p>
+            <p className="mt-2 font-semibold text-[#f3eee6]">{membership}</p>
           </div>
           <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
             <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Notifications</p>
-            <p className="mt-2 font-semibold text-[#f3eee6]">Email + SMS</p>
+            <p className="mt-2 font-semibold text-[#f3eee6]">{notifications}</p>
           </div>
           <div className="rounded-2xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
             <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Payment Method</p>
-            <p className="mt-2 font-semibold text-[#f3eee6]">Visa •••• 4242</p>
+            <p className="mt-2 font-semibold text-[#f3eee6]">{paymentMethod}</p>
           </div>
         </div>
 
@@ -111,19 +131,19 @@ export default async function ProfilePage() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">City</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Manila</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{preferenceCity}</p>
               </div>
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Event type</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Live music</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{preferenceEventType}</p>
               </div>
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Time slot</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Evenings</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{preferenceTimeSlot}</p>
               </div>
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3 text-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Alerts</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Instant</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{preferenceAlerts}</p>
               </div>
             </div>
           </section>
@@ -163,3 +183,4 @@ export default async function ProfilePage() {
     </main>
   );
 }
+

@@ -38,6 +38,15 @@ model User {
   email        String     @unique
   passwordHash String
   name         String
+  avatarUrl    String?
+  membershipTier String?
+  notificationPreference String?
+  paymentBrand String?
+  paymentLast4 String?
+  preferenceCity String?
+  preferenceEventType String?
+  preferenceTimeSlot String?
+  preferenceAlerts String?
   role         Role       @default(USER)
   createdAt    DateTime   @default(now())
   sessions     Session[]

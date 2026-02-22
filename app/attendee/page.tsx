@@ -95,6 +95,13 @@ export default async function AttendeeAccountPage() {
     status: "Attended",
   }));
 
+  const membership = user.membershipTier ?? "Standard Attendee";
+  const notifications = user.notificationPreference ?? "Email + SMS";
+  const paymentMethod =
+    user.paymentBrand && user.paymentLast4
+      ? `${user.paymentBrand} **** ${user.paymentLast4}`
+      : "Visa **** 4242";
+
   return (
     <main
       className={`${bodyFont.className} min-h-screen text-[#f3eee6]`}
@@ -182,15 +189,15 @@ export default async function AttendeeAccountPage() {
             <div className="mt-4 space-y-3 text-sm text-[#d6d8e4]">
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Membership</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Standard Attendee</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{membership}</p>
               </div>
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Notifications</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Email + SMS</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{notifications}</p>
               </div>
               <div className="rounded-xl border border-[#27314b] bg-[#0f141f] px-4 py-3">
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b8bfd3]">Payment Method</p>
-                <p className="mt-2 font-semibold text-[#f3eee6]">Visa •••• 4242</p>
+                <p className="mt-2 font-semibold text-[#f3eee6]">{paymentMethod}</p>
               </div>
             </div>
             <Link
@@ -230,3 +237,4 @@ export default async function AttendeeAccountPage() {
     </main>
   );
 }
+

@@ -7,9 +7,15 @@ type Props = {
   headingClassName: string;
   initialName: string;
   initialEmail: string;
+  initialAvatarUrl?: string | null;
 };
 
-export default function EditPanel({ headingClassName, initialName, initialEmail }: Props) {
+export default function EditPanel({
+  headingClassName,
+  initialName,
+  initialEmail,
+  initialAvatarUrl,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -43,7 +49,12 @@ export default function EditPanel({ headingClassName, initialName, initialEmail 
               </button>
             </div>
             <div className="mt-4">
-              <ProfileForm initialName={initialName} initialEmail={initialEmail} />
+              <ProfileForm
+                initialName={initialName}
+                initialEmail={initialEmail}
+                initialAvatarUrl={initialAvatarUrl}
+                onSaved={() => setOpen(false)}
+              />
             </div>
           </div>
         </div>
