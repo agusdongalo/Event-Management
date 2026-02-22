@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { hashPassword, createSession } from "@/lib/auth";
+import { sendEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 
 type SignupBody = {
@@ -55,6 +56,16 @@ export async function POST(request: Request) {
     });
 
     await createSession(user.id);
+
+    await sendEmail({
+      to: user.email,
+      subject: "Welcome to SuperDon Elite",
+      text:
+        `Hi ${user.name},\n\n` +
+        "Your account is ready. You can now sign in and start exploring events.\n\n" +
+        "If you did not create this account, you can ignore this email.",
+    });
+
     return NextResponse.json({ user }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Unable to create account." }, { status: 500 });

@@ -280,51 +280,6 @@ export function AuthForm({ mode }: AuthFormProps) {
               ) : null}
             </form>
 
-            <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-              <p className="text-[10px] uppercase tracking-[0.35em] text-[#b9c1d4]">
-                Or continue with
-              </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <button
-                  type="button"
-                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80"
-                  aria-label="Continue with Gmail"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
-                    <path
-                      fill="#EA4335"
-                      d="M12 12.7L3.2 6.2A2.2 2.2 0 0 1 5 5h14a2.2 2.2 0 0 1 1.8 1.2L12 12.7z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M12 12.7l-9-6.6A2.2 2.2 0 0 0 2 8.1V18a2 2 0 0 0 2 2h4.7l3.3-7.3z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 12.7l3.3 7.3H20a2 2 0 0 0 2-2V8.1a2.2 2.2 0 0 0-1-2l-9 6.6z"
-                    />
-                    <path
-                      fill="#4285F4"
-                      d="M2 8.1v-.1c0-.3.1-.6.2-.9L12 12.7l9.8-5.6c.1.3.2.6.2.9v.1l-10 7.3-10-7.3z"
-                    />
-                  </svg>
-                  Gmail
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80"
-                  aria-label="Continue with Facebook"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4">
-                    <path
-                      fill="#1877F2"
-                      d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z"
-                    />
-                  </svg>
-                  Facebook
-                </button>
-              </div>
-            </div>
           </div>
           <div className="mt-auto flex justify-end pt-6">
             <Link

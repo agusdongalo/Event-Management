@@ -3,7 +3,7 @@ Built for high-end event hosts who demand precision, privacy, and seamless guest
 
 **Features**
 - Role-based routing for attendee, organizer, and admin
-- Auth (signup/login/logout) with session cookies
+- Auth (email/password signup/login/logout) with session cookies
 - Event browsing and event detail pages
 - Registrations with attendee and admin/organizer views
 - Profile editing (name/email/password) with avatar upload to S3
@@ -43,6 +43,12 @@ Configure `.env`:
 ```bash
 DATABASE_URL="mysql://root@localhost:3306/events_demo"
 SESSION_SECRET="change-this-to-a-long-random-string"
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="465"
+SMTP_SECURE="true"
+SMTP_USER=""
+SMTP_PASS=""
+SMTP_FROM=""
 S3_BUCKET=""
 S3_REGION=""
 S3_ACCESS_KEY_ID=""
@@ -51,6 +57,14 @@ S3_ENDPOINT=""
 S3_PUBLIC_URL_BASE=""
 S3_FORCE_PATH_STYLE="false"
 ```
+
+Email (Gmail SMTP):
+- Enable 2-Step Verification on your Google account.
+- Create an **App Password** for Mail.
+- Set:
+  - `SMTP_USER` = your Gmail address
+  - `SMTP_PASS` = the app password
+  - `SMTP_FROM` = a "From" address (often the same as `SMTP_USER`)
 
 Prisma:
 ```bash

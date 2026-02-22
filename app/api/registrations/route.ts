@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { sendEmail } from "@/lib/email";
 
 type RegistrationBody = {
   eventId?: string;
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
 
     const event = await prisma.event.findUnique({
       where: { id: eventId },
-      select: { id: true, capacity: true },
+      select: { id: true, capacity: true, title: true, startAt: true, venue: true },
     });
 
     if (!event) {
@@ -67,6 +68,22 @@ export async function POST(request: Request) {
         status: "PENDING",
       },
     });
+
+    if (user.email) {
+      const when = event.startAt.toISOString();
+      await sendEmail({
+        to: user.email,
+        subject: `Registration received: ${event.title}`,
+        text:
+          `Hi ${user.name ?? "there"},\n\n` +
+          `We received your registration for "${event.title}".\n` +
+          `Status: Pending\n` +
+          `Date/Time (UTC): ${when}\n` +
+          `Venue: ${event.venue}\n` +
+          `Ticket tier: ${tier}\n\n` +
+          "We will notify you once your registration is approved.",
+      });
+    }
 
     return NextResponse.json({ registration }, { status: 201 });
   } catch (error) {
