@@ -1,4 +1,4 @@
-    # The Private Event Platform for Elite Hosts
+# The Private Event Platform for Elite Hosts
 Built for high-end event hosts who demand precision, privacy, and seamless guest flow with attendee, organizer, and admin experiences.
 
 **Features**
