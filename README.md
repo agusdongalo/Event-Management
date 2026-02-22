@@ -1,60 +1,85 @@
 # Events Management Demo
+Next.js events management demo with attendee, organizer, and admin experiences. Uses Prisma + MySQL and S3-compatible storage for profile avatars.
 
-Next.js demo for the events management experience (attendee, organizer, admin).
+**Features**
+- Role-based routing for attendee, organizer, and admin
+- Auth (signup/login/logout) with session cookies
+- Event browsing and event detail pages
+- Registrations with attendee and admin/organizer views
+- Profile editing (name/email/password) with avatar upload to S3
+- Admin dashboards for analytics, events, users, registrations, messages, settings
+- Organizer dashboards for events, attendees, bookings, messages, profile
+- Attendee account overview with upcoming and recent events
 
-## Getting Started
+**Tech Stack**
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- Prisma
+- MySQL
+- AWS S3 (or S3-compatible storage)
 
+**Roles**
+- admin: full admin dashboard
+- organizer: manage events, attendees, bookings, messages, profile
+- user (attendee): browse events, register, profile, attendee account
+
+**Portals**
+- Attendee: `/attendee`
+- Organizer: `/organizer`
+- Admin: `/admin`
+- Public events: `/events` and `/events/[id]`
+- Auth: `/login`, `/signup`
+- Profile: `/profile`
+- Apply access: `/apply-access`
+
+**Setup**
 Install dependencies:
-
 ```bash
 npm install
 ```
 
-Set env vars in `.env`:
-
-- `DATABASE_URL`
-- `SESSION_SECRET`
-- `S3_BUCKET`
-- `S3_REGION`
-- `S3_ACCESS_KEY_ID`
-- `S3_SECRET_ACCESS_KEY`
-- `S3_ENDPOINT` (optional for S3-compatible storage)
-- `S3_PUBLIC_URL_BASE` (optional CDN/public base)
-- `S3_FORCE_PATH_STYLE` (`true` for path-style endpoints)
-
-Run the dev server:
-
+Configure `.env`:
 ```bash
-npm run dev
+DATABASE_URL="mysql://root@localhost:3306/events_demo"
+SESSION_SECRET="change-this-to-a-long-random-string"
+S3_BUCKET=""
+S3_REGION=""
+S3_ACCESS_KEY_ID=""
+S3_SECRET_ACCESS_KEY=""
+S3_ENDPOINT=""
+S3_PUBLIC_URL_BASE=""
+S3_FORCE_PATH_STYLE="false"
 ```
 
-Open `http://localhost:3000`.
-
-## Prisma
-
-This repo may start without a migrations history. If you see drift errors, use one of these paths.
-
-Fast dev sync (no migrations):
-
+Prisma:
 ```bash
+# Fast dev sync (no migrations)
 npx prisma db push
 npx prisma generate
 ```
 
-Reset and create migrations (drops data):
-
 ```bash
+# Reset and create migrations (drops data)
 npx prisma migrate reset
 npx prisma migrate dev --name init
 ```
 
-If `prisma generate` fails with an EPERM error on Windows, stop the dev server, then:
-
+If `prisma generate` fails with EPERM on Windows:
 ```bash
 Remove-Item -Recurse -Force node_modules\.prisma
 npx prisma generate
 ```
 
-## Profile Avatars
+Run the app:
+```bash
+npm run dev
+```
 
-Avatar uploads are stored in S3. If S3 env vars are missing, the profile API will reject avatar uploads.
+**Key Paths**
+- Landing page: `app/page.tsx`
+- Attendee account: `app/attendee/page.tsx`
+- Profile: `app/profile/page.tsx`
+- Admin dashboard: `app/admin/page.tsx`
+- Organizer dashboard: `app/organizer/page.tsx`
+- Event detail: `app/events/[id]/page.tsx`
