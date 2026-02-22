@@ -1,5 +1,5 @@
-# Events Management Demo
-Next.js events management demo with attendee, organizer, and admin experiences. Uses Prisma + MySQL and S3-compatible storage for profile avatars.
+    # The Private Event Platform for Elite Hosts
+Built for high-end event hosts who demand precision, privacy, and seamless guest flow with attendee, organizer, and admin experiences.
 
 **Features**
 - Role-based routing for attendee, organizer, and admin
