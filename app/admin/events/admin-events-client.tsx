@@ -20,13 +20,27 @@ type OrganizerOption = {
   email: string;
 };
 
+type EventSeed = {
+  title: string;
+  date: string;
+  venue: string;
+  status: string;
+  seats: number;
+};
+
 type Props = {
-  initialEvents: EventItem[];
+  initialEvents: EventSeed[];
   organizers: OrganizerOption[];
 };
 
 export default function AdminEventsClient({ initialEvents, organizers }: Props) {
-  const [events, setEvents] = useState<EventItem[]>(initialEvents);
+  const [events, setEvents] = useState<EventItem[]>(
+    initialEvents.map((event) => ({
+      ...event,
+      status:
+        event.status === "Live" || event.status === "Draft" ? event.status : "Upcoming",
+    }))
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All statuses");
