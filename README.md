@@ -68,15 +68,23 @@ Email (Gmail SMTP):
 
 Prisma:
 ```bash
-# Fast dev sync (no migrations)
-npx prisma db push
+# Generate the Prisma client
 npx prisma generate
 ```
 
 ```bash
-# Reset and create migrations (drops data)
+# Apply checked-in migrations
+npx prisma migrate deploy
+```
+
+```bash
+# Create a new migration during development
+npx prisma migrate dev --name your_change_name
+```
+
+```bash
+# Reset local database and re-apply migrations (drops data)
 npx prisma migrate reset
-npx prisma migrate dev --name init
 ```
 
 If `prisma generate` fails with EPERM on Windows:
@@ -89,6 +97,32 @@ Run the app:
 ```bash
 npm run dev
 ```
+
+## Deploy To Render
+This repo now includes a [`render.yaml`](./render.yaml) Blueprint for:
+- a Node web service for the Next.js app
+- a private MySQL service based on Render's official MySQL example
+
+Before syncing the Blueprint:
+1. Push this repo to GitHub, GitLab, or Bitbucket.
+2. In Render, create a new Blueprint and point it to your repo.
+3. During the first sync, fill the prompted secret values.
+4. Set `DATABASE_URL` manually for the web service to the internal MySQL URL:
+
+```bash
+mysql://events_user:<MYSQL_PASSWORD>@events-demo-mysql:3306/events_demo
+```
+
+Notes:
+- `DATABASE_URL` must be entered manually because the Blueprint can't compose a MySQL connection string from another private service's host and password automatically.
+- The web service uses `npx prisma migrate deploy` as its pre-deploy step and includes an initial checked-in migration.
+- The health check endpoint is `/api/health`.
+- Render's MySQL guide requires a persistent disk mounted at `/var/lib/mysql`.
+- Private services are not on Render's free plan, so this setup uses the `starter` plan.
+
+If your current local MySQL database was created with `prisma db push`, Prisma may treat it as ahead of the new migration history. In that case, use a fresh database locally or reset it before switching your local workflow fully to migrations.
+
+If you don't need email or S3 uploads immediately, you can leave those secrets blank and add them later in the Render dashboard before using those features.
 
 **Key Paths**
 - Landing page: `app/page.tsx`
