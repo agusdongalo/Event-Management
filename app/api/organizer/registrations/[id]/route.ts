@@ -7,11 +7,11 @@ type Body = {
   id?: string;
 };
 
-type Params = {
-  params: { id: string };
+type RouteContext = {
+  params: Promise<{ id: string }>;
 };
 
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: Request, context: RouteContext) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
@@ -21,6 +21,7 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const body = (await request.json()) as Body;
+  const params = await context.params;
   const registrationId = params.id ?? body.id ?? "";
   if (!registrationId) {
     return NextResponse.json({ error: "Registration is required." }, { status: 400 });
