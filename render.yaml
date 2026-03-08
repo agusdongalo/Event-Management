@@ -3,7 +3,7 @@ services:
     name: events-demo-web
     runtime: node
     plan: free
-    buildCommand: npm ci && npx prisma generate && npm run build
+    buildCommand: npm ci --include=dev && npx prisma generate && npm run build
     preDeployCommand: npx prisma migrate deploy
     startCommand: npm start
     healthCheckPath: /api/health
