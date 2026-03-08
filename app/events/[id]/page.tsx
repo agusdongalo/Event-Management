@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getCurrentUser } from "@/lib/auth";
@@ -67,14 +68,14 @@ export default async function EventDetailPage({ params }: Props) {
             Event not found
           </h1>
           <p className="mt-3 text-sm text-[#cbd2e7]">
-            The event you tried to open doesn't exist or was removed.
+            The event you tried to open doesn&apos;t exist or was removed.
           </p>
-          <a
+          <Link
             href="/events"
             className="mt-5 inline-flex rounded-full border border-[#ead8b4] bg-black/35 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
           >
             Back to events
-          </a>
+          </Link>
         </div>
       </main>
     );
@@ -112,7 +113,7 @@ export default async function EventDetailPage({ params }: Props) {
       <div className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
           <section className="flex-1">
-            <a
+            <Link
               href="/events"
               className="inline-flex items-center gap-2 rounded-full border border-[#ead8b4] bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#f8efde] transition hover:bg-black/55"
             >
@@ -129,7 +130,7 @@ export default async function EventDetailPage({ params }: Props) {
                 <path d="M15 18l-6-6 6-6" />
               </svg>
               Back to events
-            </a>
+            </Link>
 
             <div className="mt-6 rounded-3xl border border-white/10 bg-gradient-to-br from-[#121725] via-[#0d1322] to-[#0a0f1b] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
               <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">
@@ -230,7 +231,7 @@ export default async function EventDetailPage({ params }: Props) {
                 Reserve your spot
               </p>
               <p className="mt-2 text-sm text-[#cbd2e7]">
-                Choose your pass tier and submit a request. We'll notify you as soon as it is
+                Choose your pass tier and submit a request. We&apos;ll notify you as soon as it is
                 approved.
               </p>
               <div className="mt-5">

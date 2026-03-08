@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { HomeHeroHeader } from "@/components/home-hero-header";
 
 const headingFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -77,23 +78,6 @@ export default async function Home() {
   const primaryHref = "#host-access";
   const secondaryHref = user ? "/events" : "/login";
 
-  const navActions = (
-    <div className="flex items-center gap-2">
-      <Link
-        href="/login"
-        className="rounded-full border border-white/70 px-4 py-1 text-xs font-extrabold tracking-wide text-white transition hover:bg-white hover:text-black"
-      >
-        LOGIN
-      </Link>
-      <Link
-        href="/signup"
-        className="rounded-full border border-[#ead8b4] bg-[#d8b26f] px-4 py-1 text-xs font-extrabold tracking-wide text-[#151515] transition hover:brightness-110"
-      >
-        SIGN UP
-      </Link>
-    </div>
-  );
-
   return (
     <main className={`${bodyFont.className} w-full overflow-x-hidden bg-[#090b11] text-[#f3eee6]`}>
       <section
@@ -109,34 +93,7 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(214,168,92,0.18),transparent_42%),radial-gradient(circle_at_85%_70%,rgba(92,88,126,0.16),transparent_45%)]" />
 
         <div className="relative mx-auto max-w-6xl">
-          <header className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-full border border-[#d8b26f] bg-black/40 text-xs tracking-[0.25em] text-[#d8b26f]">
-                SE
-              </div>
-              <p className={`${headingFont.className} text-2xl tracking-wide text-[#f6e7c8] sm:text-4xl`}>
-                SuperDon Elite
-              </p>
-            </div>
-            <div className="flex w-full flex-wrap items-center justify-between gap-8 sm:w-auto sm:flex-nowrap">
-              {navActions}
-            </div>
-          </header>
-
-          <nav className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-white/80 sm:justify-end sm:gap-6">
-            <a href="#home" className="hover:text-white">
-              Home
-            </a>
-            <a href="#experience" className="hover:text-white">
-              The Experience
-            </a>
-            <a href="#preview" className="hover:text-white">
-              Platform
-            </a>
-            <a href="#host-access" className="hover:text-white">
-              Access
-            </a>
-          </nav>
+          <HomeHeroHeader brandClassName={headingFont.className} />
 
           <div className="mx-auto mt-20 max-w-4xl text-center md:mt-32">
             <p className="text-xs uppercase tracking-[0.4em] text-[#d8b26f]">
@@ -208,7 +165,9 @@ export default async function Home() {
                 key={item.name}
                 className="rounded-3xl border border-[#2a3248] bg-[#12192a] p-6 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
               >
-                <p className="text-sm text-[#e6dcc8]">"{item.quote}"</p>
+                <p className="text-sm text-[#e6dcc8]">
+                  &ldquo;{item.quote}&rdquo;
+                </p>
                 <p className="mt-5 text-xs uppercase tracking-[0.3em] text-[#d8b26f]">
                   {item.name}
                 </p>

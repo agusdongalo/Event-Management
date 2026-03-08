@@ -13,16 +13,23 @@ function applyTheme(theme: ThemeMode) {
   document.body.classList.toggle("organizer-dark", theme === "dark");
 }
 
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") return "light";
+
+  const stored = window.localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
+  if (stored === "light" || stored === "dark") {
+    return stored;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export function ThemeToggleButton() {
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const nextTheme: ThemeMode = stored ?? (prefersDark ? "dark" : "light");
-    setTheme(nextTheme);
-    applyTheme(nextTheme);
-  }, []);
+    applyTheme(theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     const nextTheme: ThemeMode = theme === "dark" ? "light" : "dark";

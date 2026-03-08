@@ -131,7 +131,7 @@ export default function VisitorSignupClient({ headingClassName }: Props) {
       >
         {loading ? "Creating account..." : "Sign Up"}
       </button>
-      <p className="text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60">
+      <p className="hidden text-[11px] uppercase tracking-[0.28em] text-[#d8caa7]/60 sm:block">
         Visitor access
       </p>
     </form>
