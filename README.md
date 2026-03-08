@@ -99,26 +99,25 @@ npm run dev
 ```
 
 ## Deploy To Render
-This repo now includes a [`render.yaml`](./render.yaml) Blueprint for:
-- a Node web service for the Next.js app
-- a private MySQL service based on Render's official MySQL example
+This repo now includes a [`render.yaml`](./render.yaml) Blueprint for a free Render web service.
 
 Before syncing the Blueprint:
 1. Push this repo to GitHub, GitLab, or Bitbucket.
 2. In Render, create a new Blueprint and point it to your repo.
-3. During the first sync, fill the prompted secret values.
-4. Set `DATABASE_URL` manually for the web service to the internal MySQL URL:
+3. Create or obtain an external MySQL database from a provider outside Render.
+4. During the first sync, fill the prompted secret values.
+5. Set `DATABASE_URL` manually for the web service to your external MySQL connection string:
 
 ```bash
-mysql://events_user:<MYSQL_PASSWORD>@events-demo-mysql:3306/events_demo
+mysql://USERNAME:PASSWORD@HOST:3306/DATABASE_NAME
 ```
 
 Notes:
-- `DATABASE_URL` must be entered manually because the Blueprint can't compose a MySQL connection string from another private service's host and password automatically.
+- `DATABASE_URL` must point to an external MySQL database because Render's free web services do not include free MySQL hosting with persistent disks.
 - The web service uses `npx prisma migrate deploy` as its pre-deploy step and includes an initial checked-in migration.
 - The health check endpoint is `/api/health`.
-- Render's MySQL guide requires a persistent disk mounted at `/var/lib/mysql`.
-- Private services are not on Render's free plan, so this setup uses the `starter` plan.
+- Render free web services spin down after 15 minutes of inactivity.
+- Free Render web services cannot send outbound traffic to SMTP ports `25`, `465`, or `587`, so Gmail SMTP will not work on the free plan.
 
 If your current local MySQL database was created with `prisma db push`, Prisma may treat it as ahead of the new migration history. In that case, use a fresh database locally or reset it before switching your local workflow fully to migrations.
 
