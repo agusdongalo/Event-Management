@@ -520,7 +520,13 @@ export default async function Home() {
             </a>
           </div>
           <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#1877F2] text-[10px] shadow-[0_10px_20px_rgba(24,119,242,0.35)]">
+            <a
+              href="https://www.facebook.com/don.galo.agus.2024"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit Don Galo Agus on Facebook"
+              className="grid h-8 w-8 place-items-center rounded-full bg-[#1877F2] text-[10px] shadow-[0_10px_20px_rgba(24,119,242,0.35)] transition hover:scale-105"
+            >
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -528,9 +534,13 @@ export default async function Home() {
               >
                 <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.07 4.39 23.06 10.12 24v-8.43H7.08v-3.5h3.04V9.41c0-3.04 1.79-4.72 4.54-4.72 1.31 0 2.68.24 2.68.24v2.96h-1.5c-1.48 0-1.94.93-1.94 1.88v2.25h3.3l-.53 3.5h-2.77V24C19.61 23.06 24 18.07 24 12.07z" />
               </svg>
-            </span>
-            <span
-              className="grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(214,41,118,0.35)]"
+            </a>
+            <a
+              href="https://www.instagram.com/donlicioso/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit Donlicioso on Instagram"
+              className="grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(214,41,118,0.35)] transition hover:scale-105"
               style={{
                 background:
                   "linear-gradient(135deg, #feda75 0%, #d62976 45%, #962fbf 70%, #4f5bd5 100%)",
@@ -546,9 +556,13 @@ export default async function Home() {
                 <circle cx="12" cy="12" r="3.5" />
                 <circle cx="17" cy="7" r="1" className="fill-white stroke-none" />
               </svg>
-            </span>
-            <span
-              className="relative grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(238,29,82,0.28)]"
+            </a>
+            <a
+              href="https://www.tiktok.com/@donlicioso?_r=1&_t=ZS-94W8x7rCgZF"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit Donlicioso on TikTok"
+              className="relative grid h-8 w-8 place-items-center rounded-full text-[10px] shadow-[0_10px_20px_rgba(238,29,82,0.28)] transition hover:scale-105"
               style={{
                 background:
                   "linear-gradient(135deg, #69C9D0 0%, #010101 55%, #EE1D52 100%)",
@@ -561,7 +575,7 @@ export default async function Home() {
               >
                 <path d="M21.6 7.2c-1.05.45-2.18.75-3.36.9-.32-.32-.76-.52-1.26-.52a2.7 2.7 0 0 0-2.7 2.7v4.52a6.83 6.83 0 1 1-5.93-6.77v2.39a4.5 4.5 0 1 0 3.83 4.43V2.4h2.4c.02.69.2 1.36.54 1.95.66 1.15 1.82 1.93 3.14 2.1v.75c1.21 0 2.37-.24 3.44-.7v1.7z" />
               </svg>
-            </span>
+            </a>
           </div>
           <p>Copyright 2026 SuperDon Elite Events. All rights reserved.</p>
         </div>
